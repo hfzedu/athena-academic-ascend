@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { 
@@ -19,7 +19,6 @@ import {
 interface NavItemProps {
   icon: React.ElementType;
   label: string;
-  active?: boolean;
   href: string;
   isAIPowered?: boolean;
 }
@@ -29,30 +28,36 @@ interface AthenaSidebarProps {
   setIsOpen: (open: boolean) => void;
 }
 
-const NavItem = ({ icon: Icon, label, active = false, href, isAIPowered = false }: NavItemProps) => (
-  <Link 
-    to={href} 
-    className={cn(
-      "flex items-center gap-3 rounded-lg px-3 py-2 transition-all",
-      active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "hover:bg-sidebar-accent/50 text-sidebar-foreground"
-    )}
-  >
-    <div className="relative">
-      {isAIPowered && (
-        <div className="absolute -inset-1 rounded-md bg-athena-accent opacity-20 animate-pulse-light"></div>
-      )}
-      <Icon className={cn("h-5 w-5", isAIPowered && "text-athena-gold")} />
-    </div>
-    <span>{label}</span>
-    {isAIPowered && (
-      <span className="ml-auto text-xs font-medium rounded-full bg-sidebar-accent/50 px-1.5 py-0.5">
-        AI
-      </span>
-    )}
-  </Link>
-);
-
 const AthenaSidebar = ({ isOpen, setIsOpen }: AthenaSidebarProps) => {
+  const location = useLocation();
+  
+  const NavItem = ({ icon: Icon, label, href, isAIPowered = false }: NavItemProps) => {
+    const isActive = location.pathname === href;
+    
+    return (
+      <Link 
+        to={href} 
+        className={cn(
+          "flex items-center gap-3 rounded-lg px-3 py-2 transition-all",
+          isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : "hover:bg-sidebar-accent/50 text-sidebar-foreground"
+        )}
+      >
+        <div className="relative">
+          {isAIPowered && (
+            <div className="absolute -inset-1 rounded-md bg-athena-accent opacity-20 animate-pulse-light"></div>
+          )}
+          <Icon className={cn("h-5 w-5", isAIPowered && "text-athena-gold")} />
+        </div>
+        <span>{label}</span>
+        {isAIPowered && (
+          <span className="ml-auto text-xs font-medium rounded-full bg-sidebar-accent/50 px-1.5 py-0.5">
+            AI
+          </span>
+        )}
+      </Link>
+    );
+  };
+  
   return (
     <>
       {/* Overlay for mobile */}
@@ -86,7 +91,7 @@ const AthenaSidebar = ({ isOpen, setIsOpen }: AthenaSidebarProps) => {
         
         <nav className="flex-1 overflow-auto p-4">
           <div className="space-y-1">
-            <NavItem icon={Home} label="Dashboard" active href="/" />
+            <NavItem icon={Home} label="Dashboard" href="/" />
             <NavItem icon={BookOpen} label="Courses" href="/courses" />
             <NavItem icon={Calendar} label="Schedule" href="/schedule" />
             <NavItem icon={FileText} label="Assignments" href="/assignments" isAIPowered />
