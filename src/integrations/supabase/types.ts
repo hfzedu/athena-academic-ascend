@@ -9,7 +9,392 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      attendance_excuses: {
+        Row: {
+          attendance_id: string
+          created_at: string
+          documentation_url: string | null
+          id: string
+          reason: string
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attendance_id: string
+          created_at?: string
+          documentation_url?: string | null
+          id?: string
+          reason: string
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attendance_id?: string
+          created_at?: string
+          documentation_url?: string | null
+          id?: string
+          reason?: string
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_excuses_attendance_id_fkey"
+            columns: ["attendance_id"]
+            isOneToOne: false
+            referencedRelation: "attendance_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_excuses_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance_policies: {
+        Row: {
+          absence_penalty_percentage: number | null
+          attendance_grade_weight: number | null
+          consecutive_absence_threshold: number | null
+          created_at: string
+          excused_absence_limit: number | null
+          id: string
+          late_penalty_percentage: number | null
+          section_id: string
+          updated_at: string
+        }
+        Insert: {
+          absence_penalty_percentage?: number | null
+          attendance_grade_weight?: number | null
+          consecutive_absence_threshold?: number | null
+          created_at?: string
+          excused_absence_limit?: number | null
+          id?: string
+          late_penalty_percentage?: number | null
+          section_id: string
+          updated_at?: string
+        }
+        Update: {
+          absence_penalty_percentage?: number | null
+          attendance_grade_weight?: number | null
+          consecutive_absence_threshold?: number | null
+          created_at?: string
+          excused_absence_limit?: number | null
+          id?: string
+          late_penalty_percentage?: number | null
+          section_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_policies_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: true
+            referencedRelation: "course_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance_records: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          minutes_late: number | null
+          notes: string | null
+          recorded_by: string
+          section_id: string
+          status: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          minutes_late?: number | null
+          notes?: string | null
+          recorded_by: string
+          section_id: string
+          status: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          minutes_late?: number | null
+          notes?: string | null
+          recorded_by?: string
+          section_id?: string
+          status?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_records_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_records_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "course_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_records_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_sections: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          location: string
+          max_enrollment: number
+          professor_id: string
+          schedule: string
+          section_number: string
+          semester: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          location: string
+          max_enrollment: number
+          professor_id: string
+          schedule: string
+          section_number: string
+          semester: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          location?: string
+          max_enrollment?: number
+          professor_id?: string
+          schedule?: string
+          section_number?: string
+          semester?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_sections_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_sections_professor_id_fkey"
+            columns: ["professor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          code: string
+          created_at: string
+          credits: number
+          department_id: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          credits: number
+          department_id: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          credits?: number
+          department_id?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      departments: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      enrollments: {
+        Row: {
+          created_at: string
+          id: string
+          section_id: string
+          status: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          section_id: string
+          status?: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          section_id?: string
+          status?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "course_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      teaching_assistants: {
+        Row: {
+          created_at: string
+          id: string
+          section_id: string
+          ta_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          section_id: string
+          ta_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          section_id?: string
+          ta_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teaching_assistants_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "course_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teaching_assistants_ta_id_fkey"
+            columns: ["ta_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +403,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role:
+        | "student"
+        | "professor"
+        | "teaching_assistant"
+        | "department_head"
+        | "administrator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +523,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: [
+        "student",
+        "professor",
+        "teaching_assistant",
+        "department_head",
+        "administrator",
+      ],
+    },
   },
 } as const
