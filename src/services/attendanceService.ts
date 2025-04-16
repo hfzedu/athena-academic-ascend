@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export const attendanceService = {
@@ -100,6 +99,89 @@ export const attendanceService = {
       .eq('id', excuseId)
       .select()
       .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async getAttendancePolicy(sectionId: string) {
+    const { data, error } = await supabase
+      .from('attendance_policies')
+      .select('*')
+      .eq('section_id', sectionId)
+      .single();
+    
+    if (error && error.code !== 'PGRST116') throw error;
+    return data;
+  },
+
+  async updateAttendancePolicy({
+    sectionId,
+    attendanceGradeWeight,
+    excusedAbsenceLimit,
+    consecutiveAbsenceThreshold,
+    absencePenaltyPercentage,
+    latePenaltyPercentage
+  }: {
+    sectionId: string;
+    attendanceGradeWeight?: number;
+    excusedAbsenceLimit?: number;
+    consecutiveAbsenceThreshold?: number;
+    absencePenaltyPercentage?: number;
+    latePenaltyPercentage?: number;
+  }) {
+    const { data, error } = await supabase
+      .from('attendance_policies')
+      .upsert({
+        section_id: sectionId,
+        attendance_grade_weight: attendanceGradeWeight,
+        excused_absence_limit: excusedAbsenceLimit,
+        consecutive_absence_threshold: consecutiveAbsenceThreshold,
+        absence_penalty_percentage: absencePenaltyPercentage,
+        late_penalty_percentage: latePenaltyPercentage
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async getStudentAttendanceStats(sectionId: string, studentId: string) {
+    const { data, error } = await supabase
+      .from('attendance_records')
+      .select(`
+        *,
+        excuses:attendance_excuses(*)
+      `)
+      .eq('section_id', sectionId)
+      .eq('student_id', studentId);
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async bulkRecordAttendance(records: {
+    sectionId: string;
+    studentId: string;
+    date: string;
+    status: 'present' | 'absent' | 'late' | 'excused';
+    minutesLate?: number;
+    notes?: string;
+    recordedBy: string;
+  }[]) {
+    const { data, error } = await supabase
+      .from('attendance_records')
+      .upsert(records.map(record => ({
+        section_id: record.sectionId,
+        student_id: record.studentId,
+        date: record.date,
+        status: record.status,
+        minutes_late: record.minutesLate,
+        notes: record.notes,
+        recorded_by: record.recordedBy
+      })))
+      .select();
     
     if (error) throw error;
     return data;

@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export const enrollmentService = {
@@ -37,6 +36,42 @@ export const enrollmentService = {
       .eq('id', enrollmentId)
       .select()
       .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async unenrollStudent(enrollmentId: string) {
+    const { error } = await supabase
+      .from('enrollments')
+      .delete()
+      .eq('id', enrollmentId);
+    
+    if (error) throw error;
+  },
+
+  async getStudentEnrollments(studentId: string) {
+    const { data, error } = await supabase
+      .from('enrollments')
+      .select(`
+        *,
+        section:course_sections(
+          id,
+          section_number,
+          schedule,
+          location,
+          course:courses(
+            id,
+            code,
+            name,
+            department:departments(
+              code,
+              name
+            )
+          )
+        )
+      `)
+      .eq('student_id', studentId);
     
     if (error) throw error;
     return data;

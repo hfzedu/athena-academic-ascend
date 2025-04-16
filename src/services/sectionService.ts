@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export const sectionService = {
@@ -61,5 +60,58 @@ export const sectionService = {
     
     if (error) throw error;
     return data;
+  },
+
+  async updateSection(sectionId: string, updates: {
+    section_number?: string;
+    professor_id?: string;
+    semester?: string;
+    year?: number;
+    schedule?: string;
+    location?: string;
+    max_enrollment?: number;
+  }) {
+    const { data, error } = await supabase
+      .from('course_sections')
+      .update(updates)
+      .eq('id', sectionId)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async deleteSection(sectionId: string) {
+    const { error } = await supabase
+      .from('course_sections')
+      .delete()
+      .eq('id', sectionId);
+    
+    if (error) throw error;
+  },
+
+  async addTeachingAssistant(sectionId: string, taId: string) {
+    const { data, error } = await supabase
+      .from('teaching_assistants')
+      .insert({
+        section_id: sectionId,
+        ta_id: taId
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async removeTeachingAssistant(sectionId: string, taId: string) {
+    const { error } = await supabase
+      .from('teaching_assistants')
+      .delete()
+      .eq('section_id', sectionId)
+      .eq('ta_id', taId);
+    
+    if (error) throw error;
   }
 };
