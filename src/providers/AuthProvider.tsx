@@ -25,9 +25,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Setting up auth state listener");
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        console.log("Auth state changed:", event, currentSession?.user?.id);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         
@@ -52,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      console.log("Initial session check:", currentSession?.user?.id);
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       if (currentSession?.user) {
@@ -67,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
+      console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -74,9 +78,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single();
 
       if (error) {
+        console.error('Error fetching profile:', error);
         throw error;
       }
 
+      console.log("Profile fetched:", data);
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -85,6 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log("Signing in user:", email);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -92,6 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
     } catch (error: any) {
+      console.error('Sign in error:', error);
       toast.error(error.message);
       throw error;
     }
@@ -105,6 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     role: string
   ) => {
     try {
+      console.log("Signing up user:", email, firstName, lastName, role);
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -121,6 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       toast.success('Registration successful! Please check your email to verify your account.');
     } catch (error: any) {
+      console.error('Sign up error:', error);
       toast.error(error.message);
       throw error;
     }
@@ -128,9 +138,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
+      console.log("Signing out user");
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error: any) {
+      console.error('Sign out error:', error);
       toast.error(error.message);
       throw error;
     }

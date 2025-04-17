@@ -8,10 +8,21 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function Auth() {
-  const { user, signIn, signUp } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { user, loading } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   // If user is logged in, redirect to home
   if (user) {
@@ -26,6 +37,13 @@ export default function Auth() {
           <CardDescription>AI-Powered Academic Management System</CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          
           <Tabs defaultValue="login">
             <TabsList className="grid grid-cols-2 w-full">
               <TabsTrigger value="login">Login</TabsTrigger>
@@ -33,11 +51,11 @@ export default function Auth() {
             </TabsList>
 
             <TabsContent value="login">
-              <LoginForm loading={loading} setLoading={setLoading} onSubmit={signIn} />
+              <LoginForm setError={setError} />
             </TabsContent>
 
             <TabsContent value="register">
-              <RegisterForm loading={loading} setLoading={setLoading} onSubmit={signUp} />
+              <RegisterForm setError={setError} />
             </TabsContent>
           </Tabs>
         </CardContent>
@@ -46,15 +64,21 @@ export default function Auth() {
   );
 }
 
-function LoginForm({ loading, setLoading, onSubmit }: any) {
+function LoginForm({ setError }: { setError: (error: string | null) => void }) {
+  const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    
     try {
       setLoading(true);
-      await onSubmit(email, password);
+      await signIn(email, password);
+    } catch (error: any) {
+      setError(error.message || 'Failed to sign in');
     } finally {
       setLoading(false);
     }
@@ -85,24 +109,35 @@ function LoginForm({ loading, setLoading, onSubmit }: any) {
         />
       </div>
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? 'Logging in...' : 'Login'}
+        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logging in...</> : 'Login'}
       </Button>
     </form>
   );
 }
 
-function RegisterForm({ loading, setLoading, onSubmit }: any) {
+function RegisterForm({ setError }: { setError: (error: string | null) => void }) {
+  const { signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [role, setRole] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    
+    if (!role) {
+      setError('Please select a role');
+      return;
+    }
+    
     try {
       setLoading(true);
-      await onSubmit(email, password, firstName, lastName, role);
+      await signUp(email, password, firstName, lastName, role);
+    } catch (error: any) {
+      setError(error.message || 'Failed to register');
     } finally {
       setLoading(false);
     }
@@ -170,7 +205,7 @@ function RegisterForm({ loading, setLoading, onSubmit }: any) {
         </Select>
       </div>
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? 'Registering...' : 'Register'}
+        {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Registering...</> : 'Register'}
       </Button>
     </form>
   );
