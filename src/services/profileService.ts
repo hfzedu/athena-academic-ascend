@@ -1,5 +1,8 @@
 
 import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
+
+type UserRole = Database["public"]["Enums"]["user_role"];
 
 export const profileService = {
   async getProfile(userId: string) {
@@ -29,7 +32,7 @@ export const profileService = {
     return data;
   },
   
-  async searchProfiles(query: string, role?: string) {
+  async searchProfiles(query: string, role?: UserRole) {
     let profileQuery = supabase
       .from('profiles')
       .select('*')

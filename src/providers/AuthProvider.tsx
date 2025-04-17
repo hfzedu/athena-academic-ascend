@@ -26,7 +26,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     console.log("Setting up auth state listener");
-    // Set up auth state listener FIRST
+    
+    // Set up auth state listener FIRST to prevent missing events
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
         console.log("Auth state changed:", event, currentSession?.user?.id);
@@ -44,10 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (event === 'SIGNED_IN') {
           toast.success('Successfully signed in');
-          navigate('/');
+          navigate('/', { replace: true });
         } else if (event === 'SIGNED_OUT') {
           toast.success('Successfully signed out');
-          navigate('/auth');
+          navigate('/auth', { replace: true });
         }
       }
     );
@@ -100,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
     } catch (error: any) {
       console.error('Sign in error:', error);
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to sign in');
       throw error;
     }
   };
@@ -131,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success('Registration successful! Please check your email to verify your account.');
     } catch (error: any) {
       console.error('Sign up error:', error);
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to sign up');
       throw error;
     }
   };
@@ -143,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
     } catch (error: any) {
       console.error('Sign out error:', error);
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to sign out');
       throw error;
     }
   };
