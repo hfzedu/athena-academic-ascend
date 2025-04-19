@@ -1,15 +1,35 @@
 
 import React from 'react';
-import { Bell, Settings, User, Search, Menu } from 'lucide-react';
+import { Bell, Settings, Search, Menu, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from '@/providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 interface AthenaHeaderProps {
   toggleSidebar: () => void;
 }
 
 const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
+  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/auth');
+  };
+
+  const userInitials = profile ? 
+    `${profile.first_name?.[0] || ''}${profile.last_name?.[0] || ''}`.toUpperCase() : 
+    'JA';
+
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/95 backdrop-blur px-4">
       <div className="flex items-center gap-2 lg:gap-4">
@@ -21,11 +41,11 @@ const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
           <div className="relative h-8 w-8">
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-athena-primary to-athena-accent animate-pulse-light"></div>
             <div className="absolute inset-0.5 rounded-full bg-card flex items-center justify-center">
-              <span className="text-xl font-bold text-athena-primary">A</span>
+              <span className="text-xl font-bold text-athena-primary">J</span>
             </div>
           </div>
           <span className="hidden font-semibold text-lg md:inline-block">
-            <span className="text-gradient">Athena</span>
+            <span className="text-gradient">Jamia Academia</span>
           </span>
         </div>
       </div>
@@ -49,10 +69,22 @@ const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
           <Settings className="h-5 w-5" />
           <span className="sr-only">Settings</span>
         </Button>
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="" alt="User" />
-          <AvatarFallback className="bg-gradient-to-r from-athena-primary to-athena-secondary text-white">JS</AvatarFallback>
-        </Avatar>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="h-9 w-9 cursor-pointer">
+              <AvatarImage src={profile?.avatar_url || ''} alt={profile?.first_name || 'User'} />
+              <AvatarFallback className="bg-gradient-to-r from-athena-primary to-athena-secondary text-white">
+                {userInitials}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="gap-2" onClick={handleLogout}>
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

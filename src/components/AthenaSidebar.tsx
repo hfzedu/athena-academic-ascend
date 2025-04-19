@@ -78,10 +78,10 @@ const AthenaSidebar = ({ isOpen, setIsOpen }: AthenaSidebarProps) => {
             <div className="relative h-8 w-8">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-athena-accent to-athena-gold animate-pulse-light"></div>
               <div className="absolute inset-0.5 rounded-full bg-sidebar-accent flex items-center justify-center">
-                <span className="text-xl font-bold text-white">A</span>
+                <span className="text-xl font-bold text-white">J</span>
               </div>
             </div>
-            <span className="font-semibold text-lg text-white">Athena</span>
+            <span className="font-semibold text-lg text-white">Jamia Academia</span>
           </div>
           <Button variant="ghost" size="icon" className="md:hidden text-sidebar-foreground" onClick={() => setIsOpen(false)}>
             <X className="h-5 w-5" />
