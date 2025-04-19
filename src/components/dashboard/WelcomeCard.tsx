@@ -16,6 +16,11 @@ const WelcomeCard = () => {
     greeting = "Good evening";
   }
 
+  // Get the user's first name or full name if available
+  const userName = profile ? 
+    (profile.first_name || `${profile.first_name} ${profile.last_name}`.trim()) : 
+    'User';
+
   return (
     <Card className="bg-gradient-to-br from-athena-primary to-athena-secondary text-white overflow-hidden relative">
       <CardContent className="p-6">
@@ -26,7 +31,7 @@ const WelcomeCard = () => {
         <div className="relative z-10">
           <div className="mb-4">
             <h2 className="text-xl font-bold mb-1">
-              {greeting}, {profile?.first_name || 'User'}!
+              {greeting}, {userName}!
             </h2>
             <p className="text-white/80">Welcome back to Athena. Here's your learning snapshot.</p>
           </div>
