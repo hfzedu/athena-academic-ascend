@@ -3,9 +3,10 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Brain, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/providers/AuthProvider';
 
 const WelcomeCard = () => {
-  // Get current time to display appropriate greeting
+  const { profile } = useAuth();
   const hour = new Date().getHours();
   let greeting = "Good morning";
   
@@ -24,7 +25,9 @@ const WelcomeCard = () => {
         
         <div className="relative z-10">
           <div className="mb-4">
-            <h2 className="text-xl font-bold mb-1">{greeting}, Jessica!</h2>
+            <h2 className="text-xl font-bold mb-1">
+              {greeting}, {profile?.first_name || 'User'}!
+            </h2>
             <p className="text-white/80">Welcome back to Athena. Here's your learning snapshot.</p>
           </div>
           

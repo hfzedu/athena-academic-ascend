@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -12,8 +11,8 @@ import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback"; 
 import NotFound from "./pages/NotFound";
 import Attendance from "./pages/Attendance";
+import Courses from "./pages/Courses";
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -37,6 +36,7 @@ const App = () => (
               <Route element={<AuthGuard />}>
                 <Route path="/" element={<Index />} />
                 <Route path="/attendance" element={<Attendance />} />
+                <Route path="/courses" element={<Courses />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
