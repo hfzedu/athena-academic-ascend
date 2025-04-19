@@ -42,7 +42,8 @@ const CourseManagement: React.FC = () => {
     name: '',
     code: '',
     description: '',
-    credits: 3
+    credits: 3,
+    department_id: '00000000-0000-0000-0000-000000000000' // Default department ID for now
   });
 
   const isAdmin = profile?.role === 'administrator' || profile?.role === 'professor';
@@ -87,7 +88,8 @@ const CourseManagement: React.FC = () => {
       name: '',
       code: '',
       description: '',
-      credits: 3
+      credits: 3,
+      department_id: '00000000-0000-0000-0000-000000000000' // Reset with default department ID
     });
     setSelectedCourse(null);
   };
@@ -106,7 +108,8 @@ const CourseManagement: React.FC = () => {
       name: course.name,
       code: course.code,
       description: course.description || '',
-      credits: course.credits
+      credits: course.credits,
+      department_id: course.department_id
     });
     setIsDialogOpen(true);
   };

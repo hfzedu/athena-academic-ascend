@@ -8,6 +8,7 @@ export interface Course {
   code: string;
   description?: string;
   credits: number;
+  department_id: string; // Add this field to match the database schema
   created_at: string;
   updated_at: string;
 }
@@ -17,6 +18,7 @@ export interface CourseInput {
   code: string;
   description?: string;
   credits: number;
+  department_id: string; // Add this required field
 }
 
 export const courseService = {
@@ -55,9 +57,16 @@ export const courseService = {
 
   async createCourse(courseInput: CourseInput) {
     try {
+      // Temporary solution: use a default department_id if not provided
+      // In a real application, you would get this from user selection
+      const courseData = {
+        ...courseInput,
+        department_id: courseInput.department_id || '00000000-0000-0000-0000-000000000000' // Default UUID for testing
+      };
+
       const { data, error } = await supabase
         .from('courses')
-        .insert([courseInput])
+        .insert(courseData)
         .select()
         .single();
         
