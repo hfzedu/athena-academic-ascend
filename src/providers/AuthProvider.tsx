@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import authService from '@/services/authService';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: any | null;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signUp: (email: string, password: string, firstName: string, lastName: string, role: string) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
@@ -106,6 +108,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      console.log("Signing in with Google");
+      await authService.signInWithGoogle();
+    } catch (error: any) {
+      console.error('Google sign in error:', error);
+      toast.error(error.message || 'Failed to sign in with Google');
+      throw error;
+    }
+  };
+
   const signUp = async (
     email: string, 
     password: string, 
@@ -155,6 +168,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       profile,
       signIn,
+      signInWithGoogle,
       signUp,
       signOut,
       loading
