@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
+import Logo from '@/components/Logo';
 
 export default function Auth() {
   const { user, loading } = useAuth();
@@ -35,8 +36,11 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-lg">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Welcome to Athena</CardTitle>
+        <CardHeader className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <Logo className="h-12 w-12" />
+            <CardTitle className="text-2xl font-bold">Jamia Academia</CardTitle>
+          </div>
           <CardDescription>AI-Powered Academic Management System</CardDescription>
         </CardHeader>
         <CardContent>
