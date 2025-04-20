@@ -22,8 +22,8 @@ export interface AssignmentInput {
 export const assignmentService = {
   async getAssignments() {
     // Use a type assertion to bypass TypeScript's type checking
-    const { data, error } = await supabase
-      .from('assignments')
+    const { data, error } = await (supabase
+      .from('assignments') as any)
       .select(`
         *,
         course_section:course_sections(
@@ -48,8 +48,8 @@ export const assignmentService = {
     if (!userId) throw new Error('User not authenticated');
 
     // Use a type assertion to bypass TypeScript's type checking
-    const { data, error } = await supabase
-      .from('assignments')
+    const { data, error } = await (supabase
+      .from('assignments') as any)
       .insert({
         ...assignment,
         created_by: userId
@@ -63,8 +63,8 @@ export const assignmentService = {
 
   async updateAssignment(id: string, updates: Partial<AssignmentInput>) {
     // Use a type assertion to bypass TypeScript's type checking
-    const { data, error } = await supabase
-      .from('assignments')
+    const { data, error } = await (supabase
+      .from('assignments') as any)
       .update(updates)
       .eq('id', id)
       .select()
@@ -76,8 +76,8 @@ export const assignmentService = {
 
   async deleteAssignment(id: string) {
     // Use a type assertion to bypass TypeScript's type checking
-    const { error } = await supabase
-      .from('assignments')
+    const { error } = await (supabase
+      .from('assignments') as any)
       .delete()
       .eq('id', id);
     
