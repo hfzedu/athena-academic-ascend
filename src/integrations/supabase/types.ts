@@ -400,7 +400,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_course: {
+        Args: {
+          p_department_id: string
+          p_code: string
+          p_name: string
+          p_description: string
+          p_credits: number
+        }
+        Returns: string
+      }
+      edit_course: {
+        Args: {
+          p_id: string
+          p_department_id: string
+          p_code: string
+          p_name: string
+          p_description: string
+          p_credits: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       user_role:
