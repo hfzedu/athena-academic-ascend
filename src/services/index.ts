@@ -6,3 +6,4 @@ export * from './attendanceService';
 export * from './profileService';
 export * from './authService';
 export * from './assignmentService';
+export * from './studentService';

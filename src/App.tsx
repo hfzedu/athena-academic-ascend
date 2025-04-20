@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,6 +15,7 @@ import Attendance from "./pages/Attendance";
 import Courses from "./pages/Courses";
 import ComingSoon from "./pages/ComingSoon";
 import Assignments from "./pages/Assignments";
+import Students from "./pages/Students";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +42,7 @@ const App = () => (
                 <Route path="/attendance" element={<Attendance />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/assignments" element={<Assignments />} />
+                <Route path="/students" element={<Students />} />
                 <Route path="/schedule" element={<ComingSoon />} />
                 <Route path="/analytics" element={<ComingSoon />} />
                 <Route path="/study-groups" element={<ComingSoon />} />

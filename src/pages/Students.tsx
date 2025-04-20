@@ -2,12 +2,10 @@
 import React, { useState } from 'react';
 import AthenaHeader from '@/components/AthenaHeader';
 import AthenaSidebar from '@/components/AthenaSidebar';
-import AssignmentManagement from '@/components/assignments/AssignmentManagement';
-import { useAuth } from '@/providers/AuthProvider';
+import StudentManagement from '@/components/students/StudentManagement';
 
-const Assignments = () => {
+const Students = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { profile } = useAuth();
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -18,12 +16,8 @@ const Assignments = () => {
         
         <main className="flex-1 overflow-auto">
           <div className="container py-6">
-            <h1 className="text-3xl font-bold tracking-tight mb-6">
-              {profile?.role === 'professor' || profile?.role === 'teaching_assistant' 
-                ? 'Assignment Management' 
-                : 'My Assignments'}
-            </h1>
-            <AssignmentManagement />
+            <h1 className="text-3xl font-bold tracking-tight mb-6">Student Management</h1>
+            <StudentManagement />
           </div>
         </main>
       </div>
@@ -31,4 +25,4 @@ const Assignments = () => {
   );
 };
 
-export default Assignments;
+export default Students;
