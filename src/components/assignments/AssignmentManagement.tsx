@@ -26,9 +26,20 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import assignmentService, { AssignmentInput } from '@/services/assignmentService';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useProtectedApi } from '@/hooks/useProtectedApi';
+import { sectionService } from '@/services';
 
 const AssignmentManagement = () => {
   const { profile } = useAuth();
+  const { callApi } = useProtectedApi();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<any>(null);
@@ -40,6 +51,16 @@ const AssignmentManagement = () => {
   });
 
   const isTeacher = profile?.role === 'professor' || profile?.role === 'teaching_assistant';
+
+  // Fetch sections for the dropdown
+  const { data: sections } = useQuery({
+    queryKey: ['teacher-sections'],
+    queryFn: async () => {
+      if (!isTeacher || !profile?.id) return [];
+      return sectionService.getSectionsByProfessor(profile.id);
+    },
+    enabled: !!isTeacher && !!profile?.id
+  });
 
   // Fetch assignments
   const { data: assignments, isLoading } = useQuery({
@@ -54,6 +75,7 @@ const AssignmentManagement = () => {
       queryClient.invalidateQueries({ queryKey: ['assignments'] });
       resetForm();
       setIsDialogOpen(false);
+      toast.success('Assignment created successfully');
     }
   });
 
@@ -65,6 +87,7 @@ const AssignmentManagement = () => {
       queryClient.invalidateQueries({ queryKey: ['assignments'] });
       resetForm();
       setIsDialogOpen(false);
+      toast.success('Assignment updated successfully');
     }
   });
 
@@ -73,6 +96,7 @@ const AssignmentManagement = () => {
     mutationFn: assignmentService.deleteAssignment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assignments'] });
+      toast.success('Assignment deleted successfully');
     }
   });
 
@@ -94,12 +118,19 @@ const AssignmentManagement = () => {
     }));
   };
 
+  const handleSelectChange = (name: string, value: string) => {
+    setFormValues(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleEditAssignment = (assignment: any) => {
     setSelectedAssignment(assignment);
     setFormValues({
       title: assignment.title,
       description: assignment.description || '',
-      due_date: assignment.due_date,
+      due_date: assignment.due_date?.slice(0, 16) || '', // Format for datetime-local input
       course_section_id: assignment.course_section_id
     });
     setIsDialogOpen(true);
@@ -107,20 +138,42 @@ const AssignmentManagement = () => {
 
   const handleDeleteAssignment = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this assignment?')) {
-      deleteAssignmentMutation.mutate(id);
+      try {
+        await callApi(() => deleteAssignmentMutation.mutateAsync(id), {
+          loadingMessage: 'Deleting assignment...',
+          errorMessage: 'Failed to delete assignment'
+        });
+      } catch (error) {
+        console.error('Error deleting assignment:', error);
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (selectedAssignment) {
-      updateAssignmentMutation.mutate({
-        id: selectedAssignment.id,
-        data: formValues
-      });
-    } else {
-      createAssignmentMutation.mutate(formValues);
+    try {
+      if (!formValues.course_section_id) {
+        toast.error('Please select a course section');
+        return;
+      }
+
+      if (selectedAssignment) {
+        await callApi(() => updateAssignmentMutation.mutateAsync({
+          id: selectedAssignment.id,
+          data: formValues
+        }), {
+          loadingMessage: 'Updating assignment...',
+          errorMessage: 'Failed to update assignment'
+        });
+      } else {
+        await callApi(() => createAssignmentMutation.mutateAsync(formValues), {
+          loadingMessage: 'Creating assignment...',
+          errorMessage: 'Failed to create assignment'
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting assignment:', error);
     }
   };
 
@@ -177,6 +230,31 @@ const AssignmentManagement = () => {
                       className="col-span-3"
                       rows={3}
                     />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="course_section_id" className="text-right">
+                      Course Section
+                    </label>
+                    <div className="col-span-3">
+                      <Select
+                        value={formValues.course_section_id}
+                        onValueChange={(value) => handleSelectChange('course_section_id', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a course section" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sections?.map((section: any) => (
+                            <SelectItem 
+                              key={section.id} 
+                              value={section.id}
+                            >
+                              {section.course?.code} - Section {section.section_number}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="due_date" className="text-right">
@@ -258,7 +336,7 @@ const AssignmentManagement = () => {
                             variant="destructive"
                             size="icon"
                             onClick={() => handleDeleteAssignment(assignment.id)}
-                            disabled={deleteAssignmentMutation.isPending}
+                            disabled={deleteAssignmentMutation.isPending && deleteAssignmentMutation.variables === assignment.id}
                           >
                             {deleteAssignmentMutation.isPending && deleteAssignmentMutation.variables === assignment.id ? (
                               <Loader2 className="h-4 w-4 animate-spin" />
