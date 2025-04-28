@@ -2,11 +2,13 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Brain, ArrowRight, Loader2 } from 'lucide-react';
+import { Brain, ArrowRight, Loader2, Edit } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const WelcomeCard = () => {
   const { profile, loading } = useAuth();
+  const navigate = useNavigate();
   const hour = new Date().getHours();
   let greeting = "Good morning";
   
@@ -16,10 +18,10 @@ const WelcomeCard = () => {
     greeting = "Good evening";
   }
 
-  // Get the user's display name
+  // Get the user's display name with proper fallback
   const displayName = profile ? 
-    `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Guest' : 
-    'Guest';
+    `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Please update your profile' : 
+    'Please log in';
 
   if (loading) {
     return (
@@ -40,9 +42,22 @@ const WelcomeCard = () => {
         
         <div className="relative z-10">
           <div className="mb-4">
-            <h2 className="text-xl font-bold mb-1">
-              {greeting}, {displayName}!
-            </h2>
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="text-xl font-bold">
+                {greeting}, {displayName}!
+              </h2>
+              {profile && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-white hover:text-white/80"
+                  onClick={() => navigate('/profile')}
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit Profile
+                </Button>
+              )}
+            </div>
             <p className="text-white/80">Welcome back to Athena. Here's your learning snapshot.</p>
           </div>
           
@@ -62,13 +77,19 @@ const WelcomeCard = () => {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button className="bg-white text-athena-primary hover:bg-white/90 flex-1">
-              View Schedule
+            <Button 
+              className="bg-white text-athena-primary hover:bg-white/90 flex-1"
+              onClick={() => navigate('/courses')}
+            >
+              Manage Courses
               <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
-            <Button className="bg-white/20 hover:bg-white/30 backdrop-blur-sm flex-1">
+            <Button 
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm flex-1"
+              onClick={() => navigate('/attendance')}
+            >
               <Brain className="mr-1 h-4 w-4" />
-              AI Assistant
+              Attendance
             </Button>
           </div>
         </div>
