@@ -1,3 +1,4 @@
+
 import * as React from "react";
 
 import type {
@@ -55,6 +56,16 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
+// Create a React context to manage the toast state
+const ToastContext = React.createContext<{
+  toasts: ToasterToast[];
+  toast: (props: Omit<ToasterToast, "id">) => { id: string; dismiss: () => void; update: (props: ToasterToast) => void };
+  dismiss: (toastId?: string) => void;
+} | undefined>(undefined);
+
+// Creating a global dispatch function reference that will be set in the Provider
+let globalDispatch: React.Dispatch<Action> | undefined;
+
 const addToRemoveQueue = (toastId: string) => {
   if (toastTimeouts.has(toastId)) {
     return;
@@ -62,10 +73,12 @@ const addToRemoveQueue = (toastId: string) => {
 
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId);
-    dispatch({
-      type: "REMOVE_TOAST",
-      toastId: toastId,
-    });
+    if (globalDispatch) {
+      globalDispatch({
+        type: "REMOVE_TOAST",
+        toastId: toastId,
+      });
+    }
   }, TOAST_REMOVE_DELAY);
 
   toastTimeouts.set(toastId, timeout);
@@ -126,13 +139,6 @@ export const reducer = (state: State, action: Action): State => {
   }
 };
 
-// Create a React context to manage the toast state
-const ToastContext = React.createContext<{
-  toasts: ToasterToast[];
-  toast: (props: Omit<ToasterToast, "id">) => { id: string; dismiss: () => void; update: (props: ToasterToast) => void };
-  dismiss: (toastId?: string) => void;
-} | undefined>(undefined);
-
 // Create a Provider component
 export function ToastProvider({
   children,
@@ -142,6 +148,14 @@ export function ToastProvider({
   const [state, dispatch] = React.useReducer(reducer, {
     toasts: [],
   });
+
+  // Store the dispatch function in our global reference
+  React.useEffect(() => {
+    globalDispatch = dispatch;
+    return () => {
+      globalDispatch = undefined;
+    };
+  }, [dispatch]);
 
   const toast = React.useCallback((props: Omit<ToasterToast, "id">) => {
     const id = genId();
