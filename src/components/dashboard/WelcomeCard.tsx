@@ -2,11 +2,11 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Brain, ArrowRight } from 'lucide-react';
+import { Brain, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';
 
 const WelcomeCard = () => {
-  const { profile } = useAuth();
+  const { profile, loading } = useAuth();
   const hour = new Date().getHours();
   let greeting = "Good morning";
   
@@ -16,10 +16,20 @@ const WelcomeCard = () => {
     greeting = "Good evening";
   }
 
-  // Get the user's first name or full name if available
-  const userName = profile ? 
-    (profile.first_name || `${profile.first_name} ${profile.last_name}`.trim()) : 
-    'User';
+  // Get the user's display name
+  const displayName = profile ? 
+    `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Guest' : 
+    'Guest';
+
+  if (loading) {
+    return (
+      <Card className="bg-gradient-to-br from-athena-primary to-athena-secondary text-white">
+        <CardContent className="p-6 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-white" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-gradient-to-br from-athena-primary to-athena-secondary text-white overflow-hidden relative">
@@ -31,7 +41,7 @@ const WelcomeCard = () => {
         <div className="relative z-10">
           <div className="mb-4">
             <h2 className="text-xl font-bold mb-1">
-              {greeting}, {userName}!
+              {greeting}, {displayName}!
             </h2>
             <p className="text-white/80">Welcome back to Athena. Here's your learning snapshot.</p>
           </div>
