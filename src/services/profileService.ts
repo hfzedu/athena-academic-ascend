@@ -22,6 +22,16 @@ export interface ProfileData {
   phone?: string;
 }
 
+export interface DepartmentData {
+  id: string;
+  name: string;
+  code: string;
+}
+
+export interface ProfileWithDepartment extends ProfileData {
+  departments?: DepartmentData | null;
+}
+
 export const profileService = {
   async getProfile(userId: string) {
     try {
@@ -108,7 +118,7 @@ export const profileService = {
         .order('last_name', { ascending: true });
       
       if (error) throw error;
-      return data;
+      return data as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({

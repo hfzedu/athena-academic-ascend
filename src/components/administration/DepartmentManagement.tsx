@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -141,7 +140,7 @@ const DepartmentManagement = () => {
 
   // Update department mutation
   const updateDepartmentMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<DepartmentInput> }) => 
+    mutationFn: ({ id, data }: { id: string; data: DepartmentInput }) => 
       departmentService.updateDepartment(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['departments'] });

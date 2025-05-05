@@ -11,7 +11,7 @@ const Assignments = () => {
 
   return (
     <div className="min-h-screen flex bg-background">
-      <AthenaSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <AthenaSidebar />
       
       <div className="flex-1 flex flex-col md:ml-72">
         <AthenaHeader toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
