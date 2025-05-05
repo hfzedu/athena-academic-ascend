@@ -16,7 +16,7 @@ import Courses from "./pages/Courses";
 import ComingSoon from "./pages/ComingSoon";
 import Assignments from "./pages/Assignments";
 import Students from "./pages/Students";
-import { ToastProvider } from "@/hooks/use-toast";
+import { ToastProvider } from "@/contexts/toast-context";
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -19,8 +19,8 @@ export interface ToastContextType {
   dismiss: (toastId?: string) => void;
 }
 
-export const TOAST_LIMIT = 1;
-export const TOAST_REMOVE_DELAY = 1000000;
+export const TOAST_LIMIT = 5;
+export const TOAST_REMOVE_DELAY = 5000;
 
 export const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
