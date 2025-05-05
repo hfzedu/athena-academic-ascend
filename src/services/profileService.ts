@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { toast } from '@/hooks/use-toast';
@@ -27,8 +28,8 @@ export interface DepartmentData {
   code: string;
 }
 
-// Define this as a completely separate interface (no extension)
-export interface ProfileWithDepartment {
+// Create a completely separate type with no extension or reference to ProfileData
+export type ProfileWithDepartment = {
   id: string;
   first_name: string;
   last_name: string;
@@ -43,9 +44,8 @@ export interface ProfileWithDepartment {
   office_hours?: string;
   bio?: string;
   phone?: string;
-  // Add department as a property (not an extension)
   departments: DepartmentData | null;
-}
+};
 
 export const profileService = {
   async getProfile(userId: string) {
@@ -134,8 +134,8 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Break type inference chain completely with double casting
-      return data as any as ProfileWithDepartment[];
+      // Use simple type assertion to avoid circular references
+      return data as any[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
