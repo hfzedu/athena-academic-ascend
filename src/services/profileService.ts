@@ -136,8 +136,8 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Force type assertion to avoid recursive type issues
-      return data as any[] as ProfileWithDepartment[];
+      // Use a type assertion to break the circular reference
+      return data as unknown[] as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
