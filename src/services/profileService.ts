@@ -28,9 +28,24 @@ export interface DepartmentData {
   code: string;
 }
 
-// Fix the circular reference by making this interface simpler
-export interface ProfileWithDepartment extends ProfileData {
-  // Make departments explicitly nullable and of type DepartmentData
+// Completely redefine this interface to avoid circular reference
+export interface ProfileWithDepartment {
+  // Explicitly include all ProfileData fields
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar_url?: string;
+  role: UserRole;
+  created_at: string;
+  updated_at: string;
+  department_id?: string;
+  title?: string;
+  office_location?: string;
+  office_hours?: string;
+  bio?: string;
+  phone?: string;
+  // Add department data as a separate property
   departments: DepartmentData | null;
 }
 
@@ -121,8 +136,8 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Use a type assertion without recursive type issues
-      return data as unknown as ProfileWithDepartment[];
+      // Force type assertion to avoid recursive type issues
+      return data as any[] as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
