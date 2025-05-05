@@ -16,6 +16,7 @@ import Courses from "./pages/Courses";
 import ComingSoon from "./pages/ComingSoon";
 import Assignments from "./pages/Assignments";
 import Students from "./pages/Students";
+import Administration from "./pages/Administration";
 import { ToastProvider } from "@/contexts/toast-context";
 
 const queryClient = new QueryClient({
@@ -45,6 +46,7 @@ const App = () => (
                   <Route path="/courses" element={<Courses />} />
                   <Route path="/assignments" element={<Assignments />} />
                   <Route path="/students" element={<Students />} />
+                  <Route path="/administration" element={<Administration />} />
                   <Route path="/schedule" element={<ComingSoon />} />
                   <Route path="/analytics" element={<ComingSoon />} />
                   <Route path="/study-groups" element={<ComingSoon />} />
