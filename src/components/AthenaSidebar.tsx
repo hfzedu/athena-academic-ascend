@@ -10,7 +10,7 @@ import {
   Settings,
   UserPlus,
   Brain,
-  Building, // Added Building icon for Administration
+  Building,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
@@ -20,7 +20,7 @@ const AthenaSidebar = () => {
   const isAdmin = profile?.role === 'administrator' || profile?.role === 'department_head';
 
   return (
-    <div className="w-64 bg-gray-900 text-gray-200 h-screen fixed top-0 left-0 overflow-y-auto">
+    <div className="w-64 bg-gray-900 text-gray-200 h-screen overflow-y-auto">
       <div className="p-4">
         <h1 className="text-2xl font-bold text-white">Athena</h1>
       </div>
