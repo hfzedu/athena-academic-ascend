@@ -134,8 +134,8 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Use simple type assertion to avoid circular references
-      return data as any[];
+      // Break the type inference chain with a more direct type assertion
+      return data as unknown[] as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
