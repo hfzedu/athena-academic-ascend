@@ -159,13 +159,7 @@ const DepartmentManagement = () => {
   });
 
   const handleCreateSubmit = async (data: DepartmentFormValues) => {
-    // Ensure code and name are required
-    const department: DepartmentInput = {
-      code: data.code,
-      name: data.name,
-    };
-    
-    await callApi(() => createDepartmentMutation.mutateAsync(department), {
+    await callApi(() => createDepartmentMutation.mutateAsync(data), {
       loadingMessage: "Creating department...",
       successMessage: "Department created successfully",
       errorMessage: "Failed to create department",
@@ -174,16 +168,10 @@ const DepartmentManagement = () => {
 
   const handleEditSubmit = async (data: DepartmentFormValues) => {
     if (!editingDepartment) return;
-    
-    // Ensure code and name are required
-    const department: DepartmentInput = {
-      code: data.code,
-      name: data.name,
-    };
 
     await callApi(() => updateDepartmentMutation.mutateAsync({ 
       id: editingDepartment.id, 
-      data: department 
+      data 
     }), {
       loadingMessage: "Updating department...",
       successMessage: "Department updated successfully",

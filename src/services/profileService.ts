@@ -28,24 +28,9 @@ export interface DepartmentData {
   code: string;
 }
 
-// Create a completely separate type with no extension or reference to ProfileData
-export type ProfileWithDepartment = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  avatar_url?: string;
-  role: UserRole;
-  created_at: string;
-  updated_at: string;
-  department_id?: string;
-  title?: string;
-  office_location?: string;
-  office_hours?: string;
-  bio?: string;
-  phone?: string;
-  departments: DepartmentData | null;
-};
+export interface ProfileWithDepartment extends ProfileData {
+  departments?: DepartmentData | null;
+}
 
 export const profileService = {
   async getProfile(userId: string) {
@@ -133,9 +118,7 @@ export const profileService = {
         .order('last_name', { ascending: true });
       
       if (error) throw error;
-      
-      // Use simple type assertion to avoid circular references
-      return data as any[];
+      return data as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
