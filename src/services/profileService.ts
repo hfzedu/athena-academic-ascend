@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { toast } from '@/hooks/use-toast';
@@ -133,9 +134,9 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Fix type instantiation by using a more direct type assertion
-      // Bypass the deep type inference completely
-      return data as ProfileWithDepartment[];
+      // First cast to unknown to break the deep type inference chain
+      // Then cast to the desired type
+      return (data as unknown) as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
