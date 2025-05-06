@@ -20,8 +20,8 @@ const WelcomeCard = () => {
 
   // Get the user's display name with proper fallback
   const displayName = profile ? 
-    `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Hafeez Bhai' : 
-    'Hafeez Bhai';
+    `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Please update your profile' : 
+    'Please log in';
 
   if (loading) {
     return (
@@ -71,7 +71,7 @@ const WelcomeCard = () => {
               <div className="text-xs text-white/80">Due Assignments</div>
             </div>
             <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm">
-              <div className="text-2xl font-bold">9.8</div>
+              <div className="text-2xl font-bold">3.8</div>
               <div className="text-xs text-white/80">Current GPA</div>
             </div>
           </div>

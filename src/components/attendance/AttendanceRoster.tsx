@@ -1,16 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Check, X, Clock, AlertTriangle, Edit } from 'lucide-react';
+import { Search, Check, X, Clock, AlertTriangle } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import studentService from '@/services/studentService';
 
 interface AttendanceRosterProps {
   sectionId: string;
@@ -43,25 +38,6 @@ const AttendanceRoster = ({ sectionId }: AttendanceRosterProps) => {
   ]);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-
-  const form = useForm({
-    defaultValues: {
-      name: '',
-      studentId: ''
-    }
-  });
-
-  // Effect to set form values when editing student changes
-  useEffect(() => {
-    if (editingStudent) {
-      form.reset({
-        name: editingStudent.name,
-        studentId: editingStudent.studentId,
-      });
-    }
-  }, [editingStudent, form]);
 
   // Filter students based on search query
   const filteredStudents = students.filter(student =>
@@ -87,26 +63,6 @@ const AttendanceRoster = ({ sectionId }: AttendanceRosterProps) => {
     );
   };
 
-  // Edit student information
-  const handleEditStudent = (student: Student) => {
-    setEditingStudent(student);
-    setIsEditDialogOpen(true);
-  };
-
-  const onSubmitEdit = (data: any) => {
-    if (!editingStudent) return;
-    
-    setStudents(prevStudents => 
-      prevStudents.map(student => 
-        student.id === editingStudent.id ? { ...student, name: data.name, studentId: data.studentId } : student
-      )
-    );
-    
-    setIsEditDialogOpen(false);
-    setEditingStudent(null);
-    toast.success("Student information updated");
-  };
-  
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
@@ -125,8 +81,8 @@ const AttendanceRoster = ({ sectionId }: AttendanceRosterProps) => {
         <div className="grid grid-cols-12 text-sm font-medium p-3 bg-muted/50 border-b">
           <div className="col-span-5">Student</div>
           <div className="col-span-2">ID</div>
-          <div className="col-span-3">Status</div>
-          <div className="col-span-2 text-right">Actions</div>
+          <div className="col-span-4">Status</div>
+          <div className="col-span-1 text-right">Notes</div>
         </div>
 
         {filteredStudents.length > 0 ? (
@@ -143,7 +99,7 @@ const AttendanceRoster = ({ sectionId }: AttendanceRosterProps) => {
                   <span className="font-medium">{student.name}</span>
                 </div>
                 <div className="col-span-2 text-sm text-muted-foreground">{student.studentId}</div>
-                <div className="col-span-3">
+                <div className="col-span-4">
                   <RadioGroup 
                     className="flex items-center gap-3" 
                     value={student.status}
@@ -175,11 +131,11 @@ const AttendanceRoster = ({ sectionId }: AttendanceRosterProps) => {
                     </div>
                   </RadioGroup>
                 </div>
-                <div className="col-span-2 text-right space-x-2">
+                <div className="col-span-1 text-right">
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="h-6 px-1"
+                    className="h-6 px-1 opacity-50 hover:opacity-100 group-hover:opacity-100"
                     onClick={() => {
                       const note = prompt("Add note for " + student.name, student.notes || "");
                       if (note !== null) {
@@ -187,16 +143,7 @@ const AttendanceRoster = ({ sectionId }: AttendanceRosterProps) => {
                       }
                     }}
                   >
-                    {student.notes ? "Edit Note" : "Add Note"}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-1"
-                    onClick={() => handleEditStudent(student)}
-                  >
-                    <Edit className="h-3 w-3 mr-1" />
-                    Edit
+                    {student.notes ? "Edit" : "Add"}
                   </Button>
                 </div>
               </div>
@@ -208,49 +155,6 @@ const AttendanceRoster = ({ sectionId }: AttendanceRosterProps) => {
           </div>
         )}
       </div>
-
-      {/* Edit Student Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Student Information</DialogTitle>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitEdit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Student name" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="studentId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Student ID</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Student ID" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit">Save Changes</Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Session, User } from '@supabase/supabase-js';
@@ -14,7 +15,6 @@ interface AuthContextType {
   signUp: (email: string, password: string, firstName: string, lastName: string, role: string) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
-  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -89,17 +89,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
-    }
-  };
-
-  const refreshProfile = async () => {
-    if (!user) return;
-    
-    try {
-      console.log("Refreshing profile for user:", user.id);
-      await fetchProfile(user.id);
-    } catch (error) {
-      console.error('Error refreshing profile:', error);
     }
   };
 
@@ -182,8 +171,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signInWithGoogle,
       signUp,
       signOut,
-      loading,
-      refreshProfile
+      loading
     }}>
       {children}
     </AuthContext.Provider>
