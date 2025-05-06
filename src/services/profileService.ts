@@ -133,8 +133,8 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Use double assertion to break the type inference chain
-      return (data as any) as ProfileWithDepartment[];
+      // Fix the type instantiation issue with a simple type assertion
+      return data as any[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
