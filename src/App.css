@@ -1,23 +1,244 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* src/index.css */
+
+/* 1. Import Tailwind's base, components, and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 2. Define CSS Custom Properties (Variables) for Theming and Consistency */
+@layer base {
+  :root {
+    /* Font Families */
+    --font-family-sans: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    --font-family-mono: 'Menlo', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+
+    /* Base Sizing & Spacing (can be aligned with Tailwind's scale or custom) */
+    --spacing-unit: 0.25rem; /* 4px, if 1rem = 16px */
+    --border-radius-sm: 0.25rem; /* 4px */
+    --border-radius-md: 0.5rem; /* 8px */
+    --border-radius-lg: 0.75rem; /* 12px */
+
+    /* Light Theme (Default) */
+    --color-background-light: 255 255 255; /* #ffffff */
+    --color-foreground-light: 26 32 44;   /* #1a202c (Gray 900) */
+    --color-primary-light: 74 144 226;    /* #4A90E2 (Blue 500) */
+    --color-primary-hover-light: 53 122 189; /* #357ABD (Darker Blue) */
+    --color-primary-foreground-light: 255 255 255; /* White text on primary */
+    --color-secondary-background-light: 243 244 246; /* #F3F4F6 (Gray 100) */
+    --color-secondary-foreground-light: 75 85 99; /* #4B5563 (Gray 600) */
+    --color-muted-foreground-light: 107 114 128; /* #6B7280 (Gray 500) */
+    --color-accent-light: 245 166 35;      /* #F5A623 (Orange 500) */
+    --color-accent-foreground-light: 255 255 255; /* White text on accent */
+    --color-border-light: 226 232 240;     /* #E2E8F0 (Gray 300) */
+    --color-destructive-light: 220 38 38;    /* #DC2626 (Red 600) */
+    --color-destructive-foreground-light: 255 255 255; /* White text on destructive */
+    --color-ring-light: var(--color-primary-light); /* Focus ring color */
+
+    /* Dark Theme */
+    --color-background-dark: 26 32 44;      /* #1a202c (Gray 900) */
+    --color-foreground-dark: 237 242 247;   /* #edf2f7 (Gray 100) */
+    --color-primary-dark: 99 179 237;       /* #63B3ED (Blue 400) */
+    --color-primary-hover-dark: 66 153 225;  /* #4299E1 (Blue 500) */
+    --color-primary-foreground-dark: 26 32 44; /* Dark text on primary for dark mode */
+    --color-secondary-background-dark: 45 55 72; /* #2D3748 (Gray 800) */
+    --color-secondary-foreground-dark: 160 174 192; /* #A0AEC0 (Gray 400) */
+    --color-muted-foreground-dark: 113 128 150; /* #718096 (Gray 500) */
+    --color-accent-dark: 246 224 94;        /* #F6E05E (Yellow 300) */
+    --color-accent-foreground-dark: 26 32 44; /* Dark text on accent for dark mode */
+    --color-border-dark: 74 85 99;          /* #4A5568 (Gray 600) */
+    --color-destructive-dark: 248 113 113;   /* #F87171 (Red 400) */
+    --color-destructive-foreground-dark: 26 32 44; /* Dark text for destructive dark */
+    --color-ring-dark: var(--color-primary-dark);
+
+    /* Apply Light Theme by Default */
+    --background: var(--color-background-light);
+    --foreground: var(--color-foreground-light);
+    --primary: var(--color-primary-light);
+    --primary-hover: var(--color-primary-hover-light);
+    --primary-foreground: var(--color-primary-foreground-light);
+    --secondary-background: var(--color-secondary-background-light);
+    --secondary-foreground: var(--color-secondary-foreground-light);
+    --muted-foreground: var(--color-muted-foreground-light);
+    --accent: var(--color-accent-light);
+    --accent-foreground: var(--color-accent-foreground-light);
+    --border: var(--color-border-light);
+    --destructive: var(--color-destructive-light);
+    --destructive-foreground: var(--color-destructive-foreground-light);
+    --ring: var(--color-ring-light);
+
+    /* General App Properties */
+    --max-width-app-container: 1280px; /* Your original max-width */
+    --padding-app-container: 2rem;    /* Your original padding */
+
+    /* Typography */
+    line-height: 1.6;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Apply Dark Theme when .dark class is present on html or body */
+  .dark {
+    --background: var(--color-background-dark);
+    --foreground: var(--color-foreground-dark);
+    --primary: var(--color-primary-dark);
+    --primary-hover: var(--color-primary-hover-dark);
+    --primary-foreground: var(--color-primary-foreground-dark);
+    --secondary-background: var(--color-secondary-background-dark);
+    --secondary-foreground: var(--color-secondary-foreground-dark);
+    --muted-foreground: var(--color-muted-foreground-dark);
+    --accent: var(--color-accent-dark);
+    --accent-foreground: var(--color-accent-foreground-dark);
+    --border: var(--color-border-dark);
+    --destructive: var(--color-destructive-dark);
+    --destructive-foreground: var(--color-destructive-foreground-dark);
+    --ring: var(--color-ring-dark);
+  }
+
+  body {
+    @apply min-h-screen flex flex-col m-0 min-w-[320px]; /* Tailwind utilities */
+    font-family: var(--font-family-sans);
+    background-color: rgb(var(--background)); /* Use CSS variables */
+    color: rgb(var(--foreground));
+  }
+
+  /* Your original #root styling, adapted */
+  #root {
+    /* max-width: var(--max-width-app-container); */ /* Now handled by layout components usually */
+    /* margin: 0 auto; */
+    /* padding: var(--padding-app-container); */ /* Also handled by layout/page components */
+    /* text-align: center; */ /* Removed global centering; apply where needed */
+    @apply flex flex-col flex-grow; /* Make root expand */
+  }
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 3. Custom Components using @layer components (or directly in your CSS/SCSS modules) */
+@layer components {
+  /* Example: Recreating your .card style with @apply and theme variables */
+  .custom-card {
+    @apply p-6 md:p-8 rounded-lg shadow-lg; /* Tailwind utilities for padding, shadow, radius */
+    background-color: rgb(var(--background)); /* Card background using theme */
+    border: 1px solid rgb(var(--border));   /* Card border using theme */
+  }
+  /* Your original .card had padding: 2em; p-8 is 2rem, p-6 is 1.5rem */
+
+  /* Button base style (can be extended for variants: primary, secondary, destructive) */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors duration-150 ease-in-out
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+           disabled:opacity-50 disabled:pointer-events-none;
+    ring-offset-background-color: rgb(var(--background)); /* For focus ring offset */
+    border: 1px solid transparent; /* Base for bordered buttons */
+  }
+
+  .btn-primary {
+    @apply btn; /* Inherit base .btn styles */
+    background-color: rgb(var(--primary));
+    color: rgb(var(--primary-foreground));
+    border-color: rgb(var(--primary)); /* Optional: make border same as bg */
+  }
+  .btn-primary:hover {
+    background-color: rgb(var(--primary-hover));
+    border-color: rgb(var(--primary-hover));
+  }
+  .btn-primary:focus-visible {
+     border-color: transparent; /* Ensure ring is primary focus indicator */
+     box-shadow: 0 0 0 2px rgb(var(--background)), 0 0 0 4px rgb(var(--ring));
+  }
+
+
+  .btn-secondary {
+    @apply btn;
+    background-color: rgb(var(--secondary-background));
+    color: rgb(var(--secondary-foreground));
+    border-color: rgb(var(--border));
+  }
+  .btn-secondary:hover {
+    @apply bg-opacity-80; /* Slight dimming or use a specific hover variable */
+    border-color: rgb(var(--muted-foreground));
+  }
+   .btn-secondary:focus-visible {
+     border-color: transparent;
+     box-shadow: 0 0 0 2px rgb(var(--background)), 0 0 0 4px rgb(var(--ring));
+  }
+
+
+  .btn-destructive {
+    @apply btn;
+    background-color: rgb(var(--destructive));
+    color: rgb(var(--destructive-foreground));
+  }
+  .btn-destructive:hover {
+    @apply bg-opacity-90; /* Or define a specific destructive-hover color */
+  }
+   .btn-destructive:focus-visible {
+     border-color: transparent;
+     box-shadow: 0 0 0 2px rgb(var(--background)), 0 0 0 4px rgb(var(--destructive)); /* Ring for destructive */
+  }
+
+
+  .btn-ghost {
+    @apply btn bg-transparent hover:bg-opacity-10;
+    color: rgb(var(--primary)); /* Or foreground for a more neutral ghost */
+  }
+  .btn-ghost:hover {
+    background-color: rgb(var(--accent) / 0.1); /* Use accent with opacity */
+  }
+
+  .btn-link {
+    @apply btn bg-transparent underline-offset-4 hover:underline p-0 h-auto;
+    color: rgb(var(--primary));
+  }
+
+  /* Input field base style */
+  .input-base {
+    @apply flex h-10 w-full rounded-md border bg-transparent px-3 py-2 text-sm 
+           ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium 
+           placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 
+           focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+    border-color: rgb(var(--border));
+    color: rgb(var(--foreground));
+  }
+  .input-base:focus-visible {
+    border-color: rgb(var(--primary)); /* Change border on focus */
+    box-shadow: 0 0 0 2px rgb(var(--background)), 0 0 0 4px rgb(var(--ring)); /* Custom ring */
+  }
+
+
+  /* Your original .logo styling, adapted to use theme variables where applicable */
+  .logo {
+    @apply h-[6em] p-[1.5em] transition-filter duration-300;
+    will-change: filter; /* Kept from original */
+  }
+  .logo:hover {
+    filter: drop-shadow(0 0 2em rgb(var(--primary) / 0.66)); /* Using primary color for shadow */
+  }
+  /* .logo.react:hover can be removed or adapted if you use a React logo specifically */
+  .logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa); /* Kept original for specific React logo example */
+  }
+
+  /* Your original .read-the-docs */
+  .read-the-docs {
+    color: rgb(var(--muted-foreground));
+  }
 }
 
+/* 4. Utilities (Tailwind mostly covers this, but you can add custom ones) */
+@layer utilities {
+  .text-balance { /* Example custom utility */
+    text-wrap: balance;
+  }
+  .content-container { /* Utility for consistent page content width and padding */
+      @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+      max-width: var(--max-width-app-container);
+  }
+}
+
+/* Keyframes (can be kept as is or defined within Tailwind config if preferred) */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -27,16 +248,10 @@
   }
 }
 
+/* Media query for animation (can also be handled by Tailwind's motion-safe/reduce variants) */
+/* This specific animation for the second logo might be part of a starter template and less relevant now */
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
+  a:nth-of-type(2) .logo { /* Be cautious with such generic selectors */
     animation: logo-spin infinite 20s linear;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+  }
