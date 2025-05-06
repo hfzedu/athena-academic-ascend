@@ -121,7 +121,7 @@ export const profileService = {
       if (error) throw error;
       
       // Fix the type instantiation error by using a two-step type assertion
-      return (data as any) as ProfileWithDepartment[];
+      return data as unknown as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
