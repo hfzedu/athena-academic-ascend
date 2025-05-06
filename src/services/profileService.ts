@@ -30,21 +30,7 @@ export interface DepartmentData {
 }
 
 // Explicitly defined interface with all properties for type safety
-export interface ProfileWithDepartment {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  avatar_url?: string;
-  role: UserRole;
-  created_at: string;
-  updated_at: string;
-  department_id?: string;
-  title?: string;
-  office_location?: string;
-  office_hours?: string;
-  bio?: string;
-  phone?: string;
+export interface ProfileWithDepartment extends ProfileData {
   departments: DepartmentData | null;
 }
 
@@ -121,7 +107,7 @@ export const profileService = {
     }
   },
   
-  // Use a consistent type assertion pattern to avoid TypeScript's deep instantiation issues
+  // Fix the excessive type instantiation issue by using a more direct type assertion
   async getByRole(role: UserRole): Promise<ProfileWithDepartment[]> {
     try {
       const { data, error } = await supabase
@@ -132,8 +118,9 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Use type assertion in two steps to avoid excessive type instantiation
-      return (data as any) as ProfileWithDepartment[];
+      // Use a simple type assertion to avoid deep type instantiation
+      // Cast to unknown first, then to the desired type
+      return (data as unknown) as ProfileWithDepartment[];
     } catch (error: any) {
       handleServiceError(`fetch profiles with role ${role}`, error);
       return [];
