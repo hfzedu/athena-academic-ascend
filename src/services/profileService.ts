@@ -133,7 +133,8 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Fix the type instantiation issue with a simple type assertion
+      // Fix the type instantiation issue with a direct type assertion
+      // Use any as an intermediary to break the deep type inference chain
       return data as any[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
