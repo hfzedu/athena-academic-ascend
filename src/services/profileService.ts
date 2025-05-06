@@ -118,7 +118,9 @@ export const profileService = {
         .order('last_name', { ascending: true });
       
       if (error) throw error;
-      return data as ProfileWithDepartment[];
+      
+      // Cast the response to the correct type with proper type assertion
+      return (data as any) as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
