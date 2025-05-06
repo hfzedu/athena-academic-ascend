@@ -27,8 +27,8 @@ export interface DepartmentData {
   code: string;
 }
 
-// Create a completely separate type with no extension or reference to ProfileData
-export type ProfileWithDepartment = {
+// Define ProfileWithDepartment as a completely separate type with explicitly listed properties
+export interface ProfileWithDepartment {
   id: string;
   first_name: string;
   last_name: string;
@@ -44,7 +44,7 @@ export type ProfileWithDepartment = {
   bio?: string;
   phone?: string;
   departments: DepartmentData | null;
-};
+}
 
 export const profileService = {
   async getProfile(userId: string) {
@@ -133,9 +133,9 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Fix the type instantiation issue with a direct type assertion
-      // Use any as an intermediary to break the deep type inference chain
-      return data as any[];
+      // Fix type instantiation by using a more direct type assertion
+      // Bypass the deep type inference completely
+      return data as ProfileWithDepartment[];
     } catch (error: any) {
       console.error(`Error fetching profiles with role ${role}:`, error);
       toast({
