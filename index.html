@@ -1,27 +1,117 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth"> {/* Add scroll-smooth for better anchor link navigation */}
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jamia Academia</title>
-    <meta name="description" content="Academic Management Platform" />
-    <meta name="author" content="Jamia Academia" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" /> {/* viewport-fit=cover for notch support */}
+    
+    <title>Jamia Academia - Modern Academic Management</title>
+    <meta name="description" content="Jamia Academia: A comprehensive and modern platform for managing courses, students, enrollments, attendance, and more, powered by AI insights." />
+    <meta name="author" content="Jamia Academia Team" />
+    <meta name="keywords" content="academic management, lms, student information system, course management, university, college, education technology, ai in education" />
 
-    <meta property="og:title" content="Jamia Academia" />
-    <meta property="og:description" content="Academic Management Platform" />
+    {/* Theme Color for Browser UI (Mobile) - Should match your --primary color */}
+    <meta name="theme-color" content="#4A00E0"> {/* Example: A deep purple, update with your actual primary color hex */}
+    {/* For dark mode, you can dynamically update this with JS or use a media query specific one if supported */}
+    {/* <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1A202C"> */}
+
+    {/* Favicon Declarations - Generate these using a tool like realfavicongenerator.net */}
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest"> {/* For PWA */}
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"> {/* For Safari Pinned Tab */}
+    <meta name="msapplication-TileColor" content="#603cba"> {/* Windows Tile Color */}
+    {/* <meta name="msapplication-config" content="/browserconfig.xml"> */} {/* If you have a browserconfig.xml */}
+
+
+    {/* Open Graph / Facebook */}
+    <meta property="og:title" content="Jamia Academia - Modern Academic Management" />
+    <meta property="og:description" content="Streamline your academic operations with Jamia Academia. Manage courses, engage students, and leverage AI for a smarter educational experience." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://your-jamia-academia-domain.com/" /> {/* IMPORTANT: Update with your actual domain */}
+    <meta property="og:image" content="https://your-jamia-academia-domain.com/og-image.png" /> {/* Use a 1200x630px image */}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Jamia Academia" />
+    {/* <meta property="fb:app_id" content="YOUR_FACEBOOK_APP_ID" /> */} {/* If you have a Facebook App ID */}
 
+
+    {/* Twitter Card */}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:site" content="@YourTwitterHandle" /> {/* Your app's Twitter handle */}
+    <meta name="twitter:creator" content="@YourCompanyTwitterHandle" /> {/* Your company's Twitter handle */}
+    <meta name="twitter:title" content="Jamia Academia - Revolutionizing Academic Management" />
+    <meta name="twitter:description" content="Discover Jamia Academia: AI-powered tools for efficient course management, student engagement, and insightful analytics." />
+    <meta name="twitter:image" content="https://your-jamia-academia-domain.com/twitter-card-image.png" /> {/* Use a 2:1 aspect ratio image, e.g., 800x400px */}
+
+
+    {/* Performance Hints - Preconnect to critical origins */}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {/* If Supabase URL is static and known */}
+    {/* <link rel="preconnect" href="YOUR_SUPABASE_PROJECT_URL.supabase.co"> */}
+    {/* If using an external CDN for other assets */}
+    {/* <link rel="preconnect" href="https://cdn.your-asset-host.com"> */}
+
+    {/* Optional: Preload critical fonts if you know them upfront and they are render-blocking */}
+    {/* <link rel="preload" href="/fonts/inter-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin> */}
+    {/* <link rel="preload" href="/fonts/inter-v12-latin-700.woff2" as="font" type="font/woff2" crossorigin> */}
+
+
+    {/* Structured Data (JSON-LD) - Example for a Software Application/Educational Organization */}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Jamia Academia",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "description": "A comprehensive academic management platform for educational institutions.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0", "priceCurrency": "USD" // Or your actual pricing model
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Jamia Academia Team",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://your-jamia-academia-domain.com/logo-for-schema.png"
+        }
+      }
+      // You can also add "@type": "EducationalOrganization" if Jamia Academia IS the institution
+    }
+    </script>
+
+    {/*
+      The following script is for gptengineer.co.
+      GPT Engineer is a tool that can generate and modify codebase based on prompts.
+      If you are NOT actively using gptengineer.co to manage this codebase,
+      this script might be removable. However, if it was added by the tool for its
+      own functionality (e.g., live updates, project management within their platform),
+      removing it might break its integration.
+      Consult the gptengineer.co documentation or support if unsure.
+      For a production build intended for end-users, and if gptengineer.co is only a
+      DEVELOPMENT tool, this script should likely be removed or conditionally included.
+    */}
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    {/* END GPT Engineer Script Note */}
+
   </head>
 
   <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <noscript>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; background-color: #f8f9fa; color: #343a40; text-align: center; padding: 20px;">
+        <h1>JavaScript Required</h1>
+        <p>Jamia Academia requires JavaScript to be enabled in your browser to function properly.</p>
+        <p>Please enable JavaScript and refresh the page, or try a different browser that supports JavaScript.</p>
+      </div>
+    </noscript>
+    <div id="root">
+      <!-- Initial loading state can be pre-rendered here if not using a JS-based PageLoader -->
+      <!-- This gets replaced by React once it mounts -->
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
