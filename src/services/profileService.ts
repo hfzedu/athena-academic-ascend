@@ -5,7 +5,6 @@ import { toast } from '@/hooks/use-toast';
 
 type UserRole = Database["public"]["Enums"]["user_role"];
 
-// Define clean, focused interfaces for better type safety and readability
 export interface ProfileData {
   id: string;
   first_name: string;
@@ -29,24 +28,27 @@ export interface DepartmentData {
   code: string;
 }
 
-// Explicitly defined interface with all properties for type safety
-export interface ProfileWithDepartment extends ProfileData {
+// Create a completely separate type with no extension or reference to ProfileData
+export type ProfileWithDepartment = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar_url?: string;
+  role: UserRole;
+  created_at: string;
+  updated_at: string;
+  department_id?: string;
+  title?: string;
+  office_location?: string;
+  office_hours?: string;
+  bio?: string;
+  phone?: string;
   departments: DepartmentData | null;
-}
-
-// Base error handler to reduce code duplication
-const handleServiceError = (operation: string, error: any) => {
-  console.error(`Error during ${operation}:`, error);
-  toast({
-    title: "Error",
-    description: `Failed to ${operation}: ${error.message}`,
-    variant: "destructive",
-  });
 };
 
-// Service implementation with optimized and consistent patterns
 export const profileService = {
-  async getProfile(userId: string): Promise<ProfileData | null> {
+  async getProfile(userId: string) {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -57,12 +59,17 @@ export const profileService = {
       if (error) throw error;
       return data as ProfileData;
     } catch (error: any) {
-      handleServiceError(`fetch profile ${userId}`, error);
+      console.error(`Error fetching profile ${userId}:`, error);
+      toast({
+        title: "Error",
+        description: `Failed to fetch profile: ${error.message}`,
+        variant: "destructive",
+      });
       return null;
     }
   },
   
-  async updateProfile(userId: string, updates: Partial<ProfileData>): Promise<ProfileData | null> {
+  async updateProfile(userId: string, updates: Partial<ProfileData>) {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -80,12 +87,17 @@ export const profileService = {
       
       return data as ProfileData;
     } catch (error: any) {
-      handleServiceError(`update profile ${userId}`, error);
+      console.error(`Error updating profile ${userId}:`, error);
+      toast({
+        title: "Error",
+        description: `Failed to update profile: ${error.message}`,
+        variant: "destructive",
+      });
       return null;
     }
   },
   
-  async searchProfiles(query: string, role?: UserRole): Promise<ProfileData[]> {
+  async searchProfiles(query: string, role?: UserRole) {
     try {
       let profileQuery = supabase
         .from('profiles')
@@ -102,13 +114,17 @@ export const profileService = {
       if (error) throw error;
       return data as ProfileData[];
     } catch (error: any) {
-      handleServiceError('search profiles', error);
+      console.error(`Error searching profiles:`, error);
+      toast({
+        title: "Error",
+        description: `Search failed: ${error.message}`,
+        variant: "destructive",
+      });
       return [];
     }
   },
   
-  // Fix the excessive type instantiation issue by using a more direct type assertion
-  async getByRole(role: UserRole): Promise<ProfileWithDepartment[]> {
+  async getByRole(role: UserRole) {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -118,37 +134,40 @@ export const profileService = {
       
       if (error) throw error;
       
-      // Use a simple type assertion to avoid deep type instantiation
-      // Cast to unknown first, then to the desired type
-      return (data as unknown) as ProfileWithDepartment[];
+      // Use simple type assertion to avoid circular references
+      return data as any[];
     } catch (error: any) {
-      handleServiceError(`fetch profiles with role ${role}`, error);
+      console.error(`Error fetching profiles with role ${role}:`, error);
+      toast({
+        title: "Error",
+        description: `Failed to fetch ${role}s: ${error.message}`,
+        variant: "destructive",
+      });
       return [];
     }
   },
   
-  // Convenience methods with proper typing
-  async getStudents(): Promise<ProfileWithDepartment[]> {
+  async getStudents() {
     return this.getByRole('student');
   },
   
-  async getProfessors(): Promise<ProfileWithDepartment[]> {
+  async getProfessors() {
     return this.getByRole('professor');
   },
   
-  async getTeachingAssistants(): Promise<ProfileWithDepartment[]> {
+  async getTeachingAssistants() {
     return this.getByRole('teaching_assistant');
   },
   
-  async getAdministrators(): Promise<ProfileWithDepartment[]> {
+  async getAdministrators() {
     return this.getByRole('administrator');
   },
   
-  async getDepartmentHeads(): Promise<ProfileWithDepartment[]> {
+  async getDepartmentHeads() {
     return this.getByRole('department_head');
   },
   
-  async getProfessorsByDepartment(departmentId: string): Promise<ProfileData[]> {
+  async getProfessorsByDepartment(departmentId: string) {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -160,7 +179,12 @@ export const profileService = {
       if (error) throw error;
       return data as ProfileData[];
     } catch (error: any) {
-      handleServiceError(`fetch professors for department ${departmentId}`, error);
+      console.error(`Error fetching professors for department ${departmentId}:`, error);
+      toast({
+        title: "Error",
+        description: `Failed to fetch professors: ${error.message}`,
+        variant: "destructive",
+      });
       return [];
     }
   }

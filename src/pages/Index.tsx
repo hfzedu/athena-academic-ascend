@@ -14,15 +14,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex bg-background">
-      {/* Fixed sidebar on larger screens, toggle-able on mobile */}
-      <div className={`fixed inset-y-0 left-0 z-50 md:relative md:flex ${sidebarOpen ? 'block' : 'hidden md:block'}`}>
-        <AthenaSidebar />
-      </div>
+      <AthenaSidebar />
       
-      <div className="flex-1 flex flex-col w-full">
+      <div className="flex-1 flex flex-col md:ml-72">
         <AthenaHeader toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-auto">
           <div className="container py-6 space-y-6 animate-fade-in">
             <WelcomeCard />
             
