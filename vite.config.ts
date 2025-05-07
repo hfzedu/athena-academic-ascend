@@ -1,3 +1,4 @@
+
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc"; // Using SWC for speed
 import path from "path";
@@ -18,7 +19,7 @@ export default defineConfig(({ mode }) => {
 
     server: {
       host: "::", // Listen on all available IPv6 and IPv4 addresses
-      port: parseInt(env.VITE_PORT || '8080', 10), // Use env var for port or default
+      port: 8080, // Always use port 8080
       open: true, // Automatically open in browser on dev server start
       // https: mode === 'development' ? true : false, // Enable HTTPS for dev (requires mkcert plugin)
       // proxy: { // Example proxy for calling external APIs during dev to avoid CORS
