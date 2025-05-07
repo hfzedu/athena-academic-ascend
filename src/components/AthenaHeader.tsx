@@ -16,11 +16,11 @@ import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 
 interface AthenaHeaderProps {
-  toggleSidebar: () => void;
+  toggleSidebar?: () => void;
 }
 
 const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
-  const { profile, signOut } = useAuth();
+  const { userProfile, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -28,21 +28,23 @@ const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
     navigate('/auth');
   };
 
-  const userName = profile ? 
-    `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'User' : 
+  const userName = userProfile ? 
+    `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim() || 'User' : 
     'User';
 
-  const userInitials = profile ? 
-    `${profile.first_name?.[0] || ''}${profile.last_name?.[0] || ''}`.toUpperCase() : 
+  const userInitials = userProfile ? 
+    `${userProfile.firstName?.[0] || ''}${userProfile.lastName?.[0] || ''}`.toUpperCase() : 
     'JA';
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/95 backdrop-blur px-4">
       <div className="flex items-center gap-2 lg:gap-4">
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
+        {toggleSidebar && (
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle menu</span>
+          </Button>
+        )}
         <div className="flex items-center gap-2">
           <Logo className="h-8 w-8" />
           <span className="hidden font-semibold text-lg md:inline-block">
@@ -70,7 +72,7 @@ const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar className="h-9 w-9 cursor-pointer">
-              <AvatarImage src={profile?.avatar_url || ''} alt={userName} />
+              <AvatarImage src={userProfile?.avatarUrl || ''} alt={userName} />
               <AvatarFallback className="bg-gradient-to-r from-athena-primary to-athena-secondary text-white">
                 {userInitials}
               </AvatarFallback>
@@ -81,7 +83,7 @@ const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">{userName}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  {profile?.email || ''}
+                  {userProfile?.email || ''}
                 </p>
               </div>
             </div>
@@ -94,7 +96,7 @@ const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
               <FileText className="h-4 w-4" />
               <span>Add Assignment</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2">
+            <DropdownMenuItem className="gap-2" onClick={() => navigate('/settings')}>
               <Settings className="h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
@@ -111,3 +113,5 @@ const AthenaHeader = ({ toggleSidebar }: AthenaHeaderProps) => {
 };
 
 export default AthenaHeader;
+
+export { AthenaHeader };

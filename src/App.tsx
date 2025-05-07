@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster"; // Assuming Shadcn/ui toaster
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"; // Assuming Shadcn/ui sonner
@@ -56,7 +57,6 @@ const InstructorGradebookPage = lazy(() => import("./pages/instructor/Instructor
 const ComingSoonPage = lazy(() => import("./pages/utility/ComingSoonPage"));
 const NotFoundPage = lazy(() => import("./pages/utility/NotFoundPage"));
 
-
 // --- Query Client Configuration ---
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -82,7 +82,6 @@ const PageLoader = () => (
     <span className="ml-3 text-lg">Loading...</span>
   </div>
 );
-
 
 // --- Main Application Component ---
 const App = () => {
@@ -134,40 +133,50 @@ const AppRoutes = () => {
       </Route>
 
       {/* Protected Application Routes (using AuthGuard and MainAppLayout) */}
-      <Route element={<AuthGuard><MainAppLayout /></AuthGuard>}>
-        <Route path="/dashboard" element={<DashboardPage />} /> {/* Generic dashboard, could redirect by role */}
-        <Route path="/profile" element={<MyProfilePage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        
-        {/* Common Academic Pages */}
-        <Route path="/courses" element={<CoursesListPage />} />
-        <Route path="/courses/:courseId" element={<CourseDetailPage />} /> {/* Add details, sections, materials */}
-        <Route path="/assignments" element={<AssignmentsPage />} /> {/* List assignments, submissions */}
-        <Route path="/my-schedule" element={<MySchedulePage />} />
-        <Route path="/attendance" element={<AttendancePage />} /> {/* Student view or instructor view */}
+      <Route element={<AuthGuard />}>
+        <Route element={<MainAppLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} /> {/* Generic dashboard, could redirect by role */}
+          <Route path="/profile" element={<MyProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          
+          {/* Common Academic Pages */}
+          <Route path="/courses" element={<CoursesListPage />} />
+          <Route path="/courses/:courseId" element={<CourseDetailPage />} /> {/* Add details, sections, materials */}
+          <Route path="/assignments" element={<AssignmentsPage />} /> {/* List assignments, submissions */}
+          <Route path="/my-schedule" element={<MySchedulePage />} />
+          <Route path="/attendance" element={<AttendancePage />} /> {/* Student view or instructor view */}
 
-        {/* Feature Placeholders */}
-        <Route path="/study-groups" element={<ComingSoonPage featureName="Study Groups" />} />
-        <Route path="/ai-chat" element={<ComingSoonPage featureName="AI Chat Assistant" />} />
-        <Route path="/ai-assistant" element={<ComingSoonPage featureName="AI Study Assistant" />} />
+          {/* Feature Placeholders */}
+          <Route path="/study-groups" element={<ComingSoonPage />} />
+          <Route path="/ai-chat" element={<ComingSoonPage />} />
+          <Route path="/ai-assistant" element={<ComingSoonPage />} />
+        </Route>
       </Route>
 
       {/* Role-Protected Admin Routes (using AdminLayout and RoleGuard) */}
-      <Route element={<AuthGuard><RoleGuard allowedRoles={['admin']}><AdminLayout /></RoleGuard></AuthGuard>}>
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-        <Route path="/admin/users" element={<AdminUserManagerPage />} />
-        <Route path="/admin/courses" element={<AdminCourseManagerPage />} />
-        {/* Add more admin routes: sections, terms, departments, site settings, audit logs etc. */}
-        <Route path="/admin/analytics" element={<ComingSoonPage featureName="Admin Analytics" />} />
+      <Route element={<AuthGuard />}>
+        <Route element={<RoleGuard allowedRoles={['admin']}> 
+          <AdminLayout />
+        </RoleGuard>}>
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          <Route path="/admin/users" element={<AdminUserManagerPage />} />
+          <Route path="/admin/courses" element={<AdminCourseManagerPage />} />
+          {/* Add more admin routes: sections, terms, departments, site settings, audit logs etc. */}
+          <Route path="/admin/analytics" element={<ComingSoonPage />} />
+        </Route>
       </Route>
       
       {/* Role-Protected Instructor Routes (could use MainAppLayout or a specific InstructorLayout) */}
-      <Route element={<AuthGuard><RoleGuard allowedRoles={['instructor', 'admin']}><MainAppLayout /></RoleGuard></AuthGuard>}>
-         <Route path="/instructor/dashboard" element={<InstructorDashboardPage />} />
-         <Route path="/instructor/courses/:courseId/gradebook" element={<InstructorGradebookPage />} />
-         <Route path="/instructor/students" element={<StudentsListPage />} /> {/* List students in their sections */}
-         {/* Add more instructor routes: manage assignments, post announcements, manage section attendance */}
+      <Route element={<AuthGuard />}>
+        <Route element={<RoleGuard allowedRoles={['instructor', 'admin']}>
+          <MainAppLayout />
+        </RoleGuard>}>
+          <Route path="/instructor/dashboard" element={<InstructorDashboardPage />} />
+          <Route path="/instructor/courses/:courseId/gradebook" element={<InstructorGradebookPage />} />
+          <Route path="/instructor/students" element={<StudentsListPage />} /> {/* List students in their sections */}
+          {/* Add more instructor routes: manage assignments, post announcements, manage section attendance */}
+        </Route>
       </Route>
 
       {/* Fallback for Not Found */}

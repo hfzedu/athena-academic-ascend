@@ -22,13 +22,6 @@ export default defineConfig(({ mode }) => {
       port: 8080, // Always use port 8080
       open: true, // Automatically open in browser on dev server start
       // https: mode === 'development' ? true : false, // Enable HTTPS for dev (requires mkcert plugin)
-      // proxy: { // Example proxy for calling external APIs during dev to avoid CORS
-      //   '/api/external': {
-      //     target: 'https://api.example.com',
-      //     changeOrigin: true,
-      //     rewrite: (path) => path.replace(/^\/api\/external/, ''),
-      //   },
-      // },
     },
     plugins: [
       react(),
@@ -102,7 +95,6 @@ export default defineConfig(({ mode }) => {
               purpose: 'maskable',
             },
           ],
-          // Add other manifest properties like orientation, related_applications, etc.
         },
         devOptions: {
           enabled: mode === 'development', // Enable PWA in dev for testing
@@ -125,12 +117,6 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        // Add other aliases if your project structure grows, e.g.:
-        // "@/components": path.resolve(__dirname, "./src/components"),
-        // "@/services": path.resolve(__dirname, "./src/services"),
-        // "@/hooks": path.resolve(__dirname, "./src/hooks"),
-        // "@/lib": path.resolve(__dirname, "./src/lib"),
-        // "@/assets": path.resolve(__dirname, "./src/assets"),
       },
     },
 
@@ -152,46 +138,15 @@ export default defineConfig(({ mode }) => {
               // Catch-all for other node_modules
               return 'vendor';
             }
-            // You could add more specific chunking for your app's components/pages if needed
-            // if (id.includes('src/pages/admin')) return 'chunk-admin';
           },
-          // More output options if needed:
-          // assetFileNames: 'assets/[name]-[hash][extname]',
-          // chunkFileNames: 'js/[name]-[hash].js',
-          // entryFileNames: 'js/[name]-[hash].js',
         },
       },
-      // Target modern browsers, but provide fallbacks if necessary
       target: 'esnext', // Or specify a list like ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14']
-      // Minification options (Terser is used by default)
-      // minify: 'terser',
-      // terserOptions: {
-      //   compress: {
-      //     drop_console: mode === 'production', // Remove console.log in production
-      //     passes: 2,
-      //   },
-      // },
     },
 
-    // Define global constants. Values are stringified.
     define: {
-      // Expose mode and other env variables to your client-side code if needed
-      // __APP_ENV__: JSON.stringify(env.APP_ENV),
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.VITE_APP_NAME': JSON.stringify(env.VITE_APP_NAME || 'Jamia Academia'),
-      // Add other VITE_ variables you want to make available in your app code
-      // 'process.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
-      // 'process.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY),
     },
-
-    // Optional: Optimize dependencies for faster cold starts in dev
-    // optimizeDeps: {
-    //   include: ['react-query', 'react-router-dom', '@supabase/supabase-js'],
-    // },
-
-    // esbuild options if you need to override defaults
-    // esbuild: {
-    //   jsxInject: `import React from 'react'`, // Not needed with plugin-react-swc if jsxRuntime is 'automatic'
-    // },
   };
 });

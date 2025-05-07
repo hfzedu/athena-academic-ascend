@@ -24,8 +24,9 @@ export interface UserProfile {
 export interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
+  profile: UserProfile | null; // Added this property
   loading: boolean;
-  isLoadingAuth: boolean; // Added for App.tsx
+  isLoadingAuth: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -38,6 +39,7 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   userProfile: null,
+  profile: null, // Added this property
   loading: true,
   isLoadingAuth: true,
   signIn: async () => {},
@@ -198,8 +200,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const value = {
     user,
     userProfile,
+    profile: userProfile, // Added this property as an alias
     loading,
-    isLoadingAuth: loading, // Added for App.tsx
+    isLoadingAuth: loading,
     signIn,
     signUp,
     signOut,

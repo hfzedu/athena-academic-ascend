@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
 
 type RoleGuardProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   allowedRoles: string[];
 };
 
