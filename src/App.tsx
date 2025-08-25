@@ -147,6 +147,7 @@ const AppRoutes = () => {
           <Route path="/attendance" element={<AttendancePage />} /> {/* Student view or instructor view */}
 
           {/* Feature Placeholders */}
+          <Route path="/analytics" element={<ComingSoonPage />} />
           <Route path="/study-groups" element={<ComingSoonPage />} />
           <Route path="/ai-chat" element={<ComingSoonPage />} />
           <Route path="/ai-assistant" element={<ComingSoonPage />} />

@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CourseManagement } from '@/components/courses/CourseManagement';
+import CourseManagement from '@/components/courses/CourseManagement';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';

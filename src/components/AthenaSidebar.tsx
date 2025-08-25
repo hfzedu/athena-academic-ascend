@@ -91,9 +91,9 @@ const AthenaSidebar = ({ isOpen, setIsOpen }: AthenaSidebarProps) => {
         
         <nav className="flex-1 overflow-auto p-4">
           <div className="space-y-1">
-            <NavItem icon={Home} label="Dashboard" href="/" />
+            <NavItem icon={Home} label="Dashboard" href="/dashboard" />
             <NavItem icon={BookOpen} label="Courses" href="/courses" />
-            <NavItem icon={Calendar} label="Schedule" href="/schedule" />
+            <NavItem icon={Calendar} label="Schedule" href="/my-schedule" />
             <NavItem icon={FileText} label="Assignments" href="/assignments" isAIPowered />
             <NavItem icon={Layers} label="Attendance" href="/attendance" isAIPowered />
           </div>

@@ -1,11 +1,11 @@
 
 import { useAuth } from '@/providers/AuthProvider';
-import { WelcomeCard } from '@/components/dashboard/WelcomeCard';
-import { CoursesCard } from '@/components/dashboard/CoursesCard';
-import { AssignmentsCard } from '@/components/dashboard/AssignmentsCard';
-import { AttendanceCard } from '@/components/dashboard/AttendanceCard';
-import { UpcomingCard } from '@/components/dashboard/UpcomingCard';
-import { AIInsightsCard } from '@/components/dashboard/AIInsightsCard';
+import WelcomeCard from '@/components/dashboard/WelcomeCard';
+import CoursesCard from '@/components/dashboard/CoursesCard';
+import AssignmentsCard from '@/components/dashboard/AssignmentsCard';
+import AttendanceCard from '@/components/dashboard/AttendanceCard';
+import UpcomingCard from '@/components/dashboard/UpcomingCard';
+import AIInsightsCard from '@/components/dashboard/AIInsightsCard';
 
 export default function DashboardPage() {
   const { userProfile } = useAuth();

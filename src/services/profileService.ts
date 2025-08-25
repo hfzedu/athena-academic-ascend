@@ -86,3 +86,25 @@ export const getByDepartment = async (departmentId: string): Promise<Profile[]> 
   if (error) throw error;
   return data || [];
 };
+
+// Convenience wrapper matching app usage
+const mapCamelToSnakeProfile = (input: Record<string, any>) => {
+  const output: Record<string, any> = {};
+  if (input.firstName !== undefined || input.first_name !== undefined) output.first_name = input.first_name ?? input.firstName;
+  if (input.lastName !== undefined || input.last_name !== undefined) output.last_name = input.last_name ?? input.lastName;
+  if (input.avatarUrl !== undefined || input.avatar_url !== undefined) output.avatar_url = input.avatar_url ?? input.avatarUrl;
+  if (input.email !== undefined) output.email = input.email;
+  if (input.role !== undefined) output.role = input.role;
+  return output;
+};
+
+export const profileService = {
+  async getProfileByUserId(userId: string): Promise<Profile | null> {
+    return getById(userId);
+  },
+  async updateProfile(userId: string, partial: Record<string, any>): Promise<Profile> {
+    const updates = mapCamelToSnakeProfile(partial);
+    return update(userId, updates as any);
+  },
+};
+

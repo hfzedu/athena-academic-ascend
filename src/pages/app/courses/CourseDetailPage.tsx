@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';
-import { courseService } from '@/services';
+import courseService from '@/services/courseService';
 
 export default function CourseDetailPage() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -22,7 +22,7 @@ export default function CourseDetailPage() {
       
       try {
         setIsLoading(true);
-        const courseData = await courseService.getCourseById(user.id, courseId);
+        const courseData = await courseService.getCourseById(courseId);
         setCourse(courseData);
       } catch (error) {
         console.error('Error fetching course:', error);

@@ -3,7 +3,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc"; // Using SWC for speed
 import path from "path";
 import { VitePWA } from "vite-plugin-pwa"; // For PWA capabilities
-import { visualizer } from "rollup-plugin-visualizer"; // For bundle analysis
+// import { visualizer } from "rollup-plugin-visualizer"; // For bundle analysis (optional)
 // import mkcert from 'vite-plugin-mkcert'; // For HTTPS in development (optional)
 import { componentTagger } from "lovable-tagger"; // Your custom plugin
 
@@ -103,12 +103,12 @@ export default defineConfig(({ mode }) => {
       }),
       // Bundle Visualizer - useful for inspecting bundle sizes
       // Only enable it when you explicitly want to analyze (e.g., via an env var)
-      process.env.ANALYZE_BUNDLE && visualizer({
-        open: true, // Automatically open in browser
-        filename: 'dist/stats.html', // Output file
-        gzipSize: true,
-        brotliSize: true,
-      }),
+      // process.env.ANALYZE_BUNDLE && visualizer({
+      //   open: true, // Automatically open in browser
+      //   filename: 'dist/stats.html', // Output file
+      //   gzipSize: true,
+      //   brotliSize: true,
+      // }),
       // Your custom lovable-tagger plugin for development
       mode === 'development' && componentTagger(),
       // mkcert(), // Enable if you need HTTPS in development (e.g., for Secure PWA features)
