@@ -121,8 +121,8 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Publicly Accessible Index/Landing Page (No AuthGuard, No MainAppLayout if distinct) */}
-      <Route path="/" element={<IndexPage />} /> {/* Example: Could be a marketing/landing page */}
+      {/* Redirect root to dashboard for app-style UX */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
       {/* Authentication Routes (using AuthLayout) */}
       <Route element={<AuthLayout />}>
@@ -147,9 +147,10 @@ const AppRoutes = () => {
           <Route path="/attendance" element={<AttendancePage />} /> {/* Student view or instructor view */}
 
           {/* Feature Placeholders */}
-          <Route path="/study-groups" element={<ComingSoonPage />} />
-          <Route path="/ai-chat" element={<ComingSoonPage />} />
-          <Route path="/ai-assistant" element={<ComingSoonPage />} />
+          <Route path="/study-groups" element={<ComingSoonPage featureName="Study Groups" />} />
+          <Route path="/ai-chat" element={<ComingSoonPage featureName="AI Chat" />} />
+          <Route path="/ai-assistant" element={<ComingSoonPage featureName="AI Learning Assistant" />} />
+          <Route path="/analytics" element={<ComingSoonPage featureName="Analytics" />} />
         </Route>
       </Route>
 

@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
-import { AttendanceManager } from '@/components/attendance/AttendanceManager';
-import { AttendanceRoster } from '@/components/attendance/AttendanceRoster';
+import AttendanceManager from '@/components/attendance/AttendanceManager';
+import AttendanceRoster from '@/components/attendance/AttendanceRoster';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/providers/AuthProvider';
 

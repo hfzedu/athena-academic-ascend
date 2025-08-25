@@ -1,6 +1,7 @@
 
 import { createContext, useState, useEffect, useContext } from 'react';
-import { User } from '@supabase/supabase-js';
+import { User, Session } from '@supabase/supabase-js';
+import type { Database } from '@/integrations/supabase/types';
 import { supabase } from '@/integrations/supabase/client';
 import { profileService } from '@/services';
 
@@ -23,6 +24,7 @@ export interface UserProfile {
 // Define the auth context type
 export interface AuthContextType {
   user: User | null;
+  session: Session | null;
   userProfile: UserProfile | null;
   profile: UserProfile | null; // Added this property
   loading: boolean;
@@ -38,6 +40,7 @@ export interface AuthContextType {
 // Create the auth context
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  session: null,
   userProfile: null,
   profile: null, // Added this property
   loading: true,
@@ -53,8 +56,21 @@ const AuthContext = createContext<AuthContextType>({
 // Auth provider component
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const mapDbProfileToUserProfile = (p: Database["public"]["Tables"]["profiles"]["Row"]): UserProfile => ({
+    id: p.id,
+    userId: p.id,
+    firstName: p.first_name,
+    lastName: p.last_name,
+    displayName: `${p.first_name || ''} ${p.last_name || ''}`.trim(),
+    avatarUrl: p.avatar_url || undefined,
+    role: p.role as unknown as string,
+    createdAt: p.created_at,
+    updatedAt: p.updated_at,
+  });
 
   // Listen for auth changes
   useEffect(() => {
@@ -64,11 +80,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       async (event, session) => {
         console.info('Auth state changed:', event, session?.user);
         setUser(session?.user ?? null);
+        setSession(session ?? null);
 
         if (session?.user) {
           try {
             const profile = await profileService.getProfileByUserId(session.user.id);
-            setUserProfile(profile);
+            if (profile) setUserProfile(mapDbProfileToUserProfile(profile));
+            else setUserProfile(null);
           } catch (error) {
             console.error('Error fetching user profile:', error);
             setUserProfile(null);
@@ -87,11 +105,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.info('Initial session check:', session);
       
       setUser(session?.user ?? null);
+      setSession(session ?? null);
       
       if (session?.user) {
         try {
           const profile = await profileService.getProfileByUserId(session.user.id);
-          setUserProfile(profile);
+          if (profile) setUserProfile(mapDbProfileToUserProfile(profile));
         } catch (error) {
           console.error('Error fetching user profile:', error);
         }
@@ -188,7 +207,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!user) throw new Error('User not authenticated');
       
       const updatedProfile = await profileService.updateProfile(user.id, profile);
-      setUserProfile(updatedProfile);
+      setUserProfile(mapDbProfileToUserProfile(updatedProfile));
     } catch (error) {
       console.error('Error updating profile:', error);
       throw error;
@@ -199,6 +218,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const value = {
     user,
+    session,
     userProfile,
     profile: userProfile, // Added this property as an alias
     loading,

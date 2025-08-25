@@ -20,7 +20,7 @@ const WelcomeCard = () => {
 
   // Get the user's display name with proper fallback
   const displayName = profile ? 
-    `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Please update your profile' : 
+    `${(profile as any).firstName || (profile as any).first_name || ''} ${(profile as any).lastName || (profile as any).last_name || ''}`.trim() || 'Please update your profile' : 
     'Please log in';
 
   if (loading) {

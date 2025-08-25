@@ -18,11 +18,11 @@ export default function CourseDetailPage() {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      if (!courseId || !user) return;
+      if (!courseId) return;
       
       try {
         setIsLoading(true);
-        const courseData = await courseService.getCourseById(user.id, courseId);
+        const courseData = await courseService.getCourseById(courseId);
         setCourse(courseData);
       } catch (error) {
         console.error('Error fetching course:', error);
