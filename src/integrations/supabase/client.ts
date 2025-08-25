@@ -3,16 +3,42 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = "https://voaucmjembsdmhwfehsc.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvYXVjbWplbWJzZG1od2ZlaHNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODA0ODAsImV4cCI6MjA2MDM1NjQ4MH0.tu3JHXnhtsjliXTPMrbKwLXA1AOgkQjE3oJz95lgtHs";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  throw new Error('Missing Supabase environment variables. Please check your .env.local file.');
+}
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    storageKey: 'athena-auth-storage'
+    storageKey: 'athena-auth-storage',
+    detectSessionInUrl: true,
+    flowType: 'pkce'
+  },
+  db: {
+    schema: 'public'
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'athena-academic-system'
+    }
   }
 });
+
+// Export a function to get the client with custom options if needed
+export const getSupabaseClient = (options?: any) => {
+  return createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    ...options,
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      storageKey: 'athena-auth-storage',
+      detectSessionInUrl: true,
+      flowType: 'pkce',
+      ...options?.auth
+    }
+  });
+};

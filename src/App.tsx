@@ -1,7 +1,7 @@
 
-import React, { Suspense, lazy } from "react";
-import { Toaster } from "@/components/ui/toaster"; // Assuming Shadcn/ui toaster
-import { Toaster as SonnerToaster } from "@/components/ui/sonner"; // Assuming Shadcn/ui sonner
+import React, { Suspense, lazy, useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -9,19 +9,19 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // Providers
 import { AuthProvider, useAuth } from "@/providers/AuthProvider";
-import { ThemeProvider } from "@/providers/ThemeProvider"; // For light/dark mode
-// import { I18nProvider } from "@/providers/I18nProvider"; // For internationalization
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 // Guards & Layouts
 import AuthGuard from "@/components/guards/AuthGuard";
-import RoleGuard from "@/components/guards/RoleGuard"; // For role-specific routes
+import RoleGuard from "@/components/guards/RoleGuard";
 import MainAppLayout from "@/layouts/MainAppLayout";
 import AuthLayout from "@/layouts/AuthLayout";
-import AdminLayout from "@/layouts/AdminLayout"; // Optional dedicated admin layout
+import AdminLayout from "@/layouts/AdminLayout";
 
 // Global Components
 import GlobalErrorBoundary from "@/components/common/GlobalErrorBoundary";
-import ScrollToTop from "@/components/common/ScrollToTop"; // Handles scroll restoration
+import ScrollToTop from "@/components/common/ScrollToTop";
+import AIChat from "@/components/ai/AIChat";
 
 // --- Page Imports (Lazy Loaded) ---
 // Public / Index
@@ -85,20 +85,26 @@ const PageLoader = () => (
 
 // --- Main Application Component ---
 const App = () => {
+  const [isAIChatMinimized, setIsAIChatMinimized] = useState(false);
+
   return (
     <React.StrictMode>
       <GlobalErrorBoundary>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider defaultTheme="system" storageKey="ams-ui-theme"> {/* Or "light", "dark" */}
+          <ThemeProvider defaultTheme="system" storageKey="ams-ui-theme">
             <TooltipProvider delayDuration={300}>
-              <Toaster /> {/* For Shadcn/ui Toasts */}
-              <SonnerToaster richColors position="top-right" /> {/* For Sonner Toasts */}
+              <Toaster />
+              <SonnerToaster richColors position="top-right" />
               <BrowserRouter>
-                <AuthProvider> {/* Manages user session and profile data */}
-                  <ScrollToTop /> {/* Handles scroll position on navigation */}
+                <AuthProvider>
+                  <ScrollToTop />
                   <Suspense fallback={<PageLoader />}>
                     <AppRoutes />
                   </Suspense>
+                  <AIChat 
+                    isMinimized={isAIChatMinimized}
+                    onToggleMinimize={() => setIsAIChatMinimized(!isAIChatMinimized)}
+                  />
                 </AuthProvider>
               </BrowserRouter>
               <ReactQueryDevtools initialIsOpen={false} />
