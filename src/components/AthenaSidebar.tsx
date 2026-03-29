@@ -24,11 +24,11 @@ interface NavItemProps {
 }
 
 interface AthenaSidebarProps {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  isOpen?: boolean;
+  setIsOpen?: (open: boolean) => void;
 }
 
-const AthenaSidebar = ({ isOpen, setIsOpen }: AthenaSidebarProps) => {
+const AthenaSidebar = ({ isOpen = true, setIsOpen = () => {} }: AthenaSidebarProps) => {
   const location = useLocation();
   
   const NavItem = ({ icon: Icon, label, href, isAIPowered = false }: NavItemProps) => {
@@ -130,4 +130,5 @@ const AthenaSidebar = ({ isOpen, setIsOpen }: AthenaSidebarProps) => {
   );
 };
 
+export { AthenaSidebar };
 export default AthenaSidebar;
